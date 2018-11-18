@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+    input,img{vertical-align:middle;}
+
+    </style>
+{% endblock %}
+
+
+{% block body %}
+<div class="ui grid">
+
+<div class="seven wide column centered">
+<form class="ui form segment" action="{% url 'users:register' %}" method="post">
+    {% csrf_token %}
+  <p>注册新用户</p>
+    <div class="field">
+      <input placeholder="名字,一经注册不可更改,请输入英文字母和数字" name="name" type="text">
+    </div>
+
+    <div class="field">
+      <input placeholder="用户名，请输入英文字母和数字" name="username" type="text">
+    </div>
+
+    <div class="field">
+      <input placeholder="邮箱" name="email" type="email">
+    </div>
+
+    <div class="field">
+      <input placeholder="密码" type="password" name="password">
+    </div>
+
+    <div class="field">
+      <input placeholder="确认密码" type="password" name="confirm_password">
+    </div>
+
+    <div class="field">
+      <input placeholder="验证码" type="text" name="captcha" style="vertical-align:middle;width: 60%;margin-right: 10%">
+      <img src="{% url 'users:captcha'%}" onclick="this.src='{% url 'users:captcha' %}?sn='+Math.random()" style="vertical-align:middle"/>
+    </div>
+  <div class="inline field">
+    <div class="ui checkbox">
+      <input type="checkbox" name="terms">
+      <label>我已阅读和同意用户条款</label>
+    </div>
+  </div>
+  <div class="ui primary submit button">提交</div>
+  <a class="ui  button" href="{% url 'users:sign_in' %}">已有账号</a>
+    <a style="color: #e0b4b4">{{ info }}</a>
+  <div class="ui error message"></div>
+</form>
+
+</div>
+</div>
+<script>
+
+$('.ui.form')
+  .form({
+    fields: {
+      name: {
+        identifier: 'name',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : '请输入名字'
+          }
+        ]
+      },
+      username: {
+        identifier: 'username',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : '请输入用户名'
+          }
+        ]
+      },
+      email: {
+        identifier: 'email',
+        rules: [
+          {
+            type   : 'email',
+            prompt : '请输入正确的邮箱格式'
+          }
+        ]
+      },
+      password: {
+        identifier: 'password',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : '请输入密码'
+          },
+          {
+            type   : 'minLength[1]',
+            prompt : '密码最少需要 {ruleValue} 字符'
+          }
+        ]
+      },
+      confirm_password: {
+        identifier: 'confirm_password',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : '请输入密码'
+          },
+          {
+            type   : 'match[password]',
+            prompt : '两次输入的密码不一致'
+          }
+        ]
+      },
+      terms: {
+        identifier: 'terms',
+        rules: [
+          {
+            type   : 'checked',
+            prompt : '必须同意条款后才可注册本网站'
+          }
+        ]
+      },
+       captcha: {
+        identifier: 'captcha',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : '请输入验证码'
+          }
+        ]
+      },
+    }
+  })
+;
+
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+    input,img{vertical-align:middle;}
+
+    </style>
+{% endblock %}
+
+
+{% block body %}
+
+
+<div class="ui relaxed grid " style="margin-left: 0em;">
+
+    <div class="five wide column" style="padding: 0%;">
+      <div class="ui card" style="width: 95%">
+        <div class="content" style="padding-left: 0%">
+        <img class="left floated mini ui image" src="{{ MEDIA_URL }}avatar/1.png">
+        <div class="header">Cute</div>
+        <div class="meta">2 days ago</div>
+      </div>
+      </div>
+        <div class="ui middle aligned selection list">
+      <div class="item">
+
+        <div class="content">
+          <div class="header">Helen</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="content">
+          <div class="header"><a href="">详细信息</a></div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="content">
+          <div class="header">Daniel</div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+
+</div>
+
+{% endblock %}
+

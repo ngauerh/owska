@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+    input,img{vertical-align:middle;}
+
+    </style>
+{% endblock %}
+
+
+{% block body %}
+
+<form class="ui form" action="{% url 'users:change_avatar' %}" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+  <div class="field">
+    <label>修改头像</label>
+    <input type="file" name="avatar">
+  </div>
+  <button class="ui green button" type="submit">提交</button>
+</form>
+
+
+{% endblock %}
+
+
