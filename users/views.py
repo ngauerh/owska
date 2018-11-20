@@ -6,6 +6,7 @@ from itsdangerous import SignatureExpired
 from .backends import send_active_email
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib import auth
 import redis
 import random
 import io
@@ -126,9 +127,12 @@ class SignIn(View):
             return render(request, 'login.html', context)
         password = request.POST.get('password')
         if check_password(password, pw.password):
-            request.session['username'] = username
-            request.session['uid'] = pw.id
-            request.session['avatar'] = str(pw.avatar)
+            user = auth.authenticate(username=username, password=password)
+            auth.login(request, user)
+
+            # request.session['username'] = username
+            # request.session['uid'] = pw.id
+            # request.session['avatar'] = str(pw.avatar)
             return redirect(reverse('forum:index'))
         else:
             context = {'info': '密码错误'}
@@ -137,8 +141,9 @@ class SignIn(View):
 
 # 登出
 def logout(request):
-    del request.session['username']
-    del request.session['uid']
+    # del request.session['username']
+    # del request.session['uid']
+    auth.logout(request)
     return redirect(reverse('forum:index'))
 
 

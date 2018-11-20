@@ -79,13 +79,14 @@
           <div class="results"></div>
         </div>
     </div>
-    {% if request.session.username %}
+{#    {% if request.session.username %}#}
+    {% if user.is_authenticated %}
         <div class="ui compact menu">
           <div class="ui simple dropdown item">
-            <img src="{{ MEDIA_URL }}{{ request.session.avatar }}" alt="">
+            <img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="">
             <div class="menu">
-              <div class="item">{{ request.session.username }}</div>
-              <div class="item"><a href="{% url 'users:member_info' request.session.username %}"><i class="user icon"></i>个人主页</a></div>
+              <div class="item">{{ user.username }}</div>
+              <div class="item"><a href="{% url 'users:member_info' user.username %}"><i class="user icon"></i>个人主页</a></div>
                 <div class="item"><a href="{% url 'users:change_avatar' %}"><i class="edit icon"></i>更改信息</a></div>
               <div class="item"><i class="photo icon"></i>我的帖子</div>
               <a class="ui button" href="{% url 'users:logout' %}" style="width: 100%">退出登陆</a>
