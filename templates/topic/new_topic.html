@@ -14,12 +14,12 @@
 
 <div class="eleven wide column centered">
 
-<form class="ui form segment" action="{% url 'forum:new' %}" method="post">
+<form class="ui form segment TopicForm"  method="post">
     {% csrf_token %}
   <p>创作新主题</p>
     <div class="field">
       <label>主题标题</label>
-      <input placeholder="标题" name="title" type="text">
+      <input placeholder="标题" name="title" type="text" class="title">
     </div>
     <div class="field">
       <label>选择节点</label>
@@ -33,7 +33,7 @@
       <label>主题正文</label>
       <textarea id="detail" name="content"></textarea>
     </div>
-    <input type="hidden" name="starter" value="{{ user.username }}">
+    <input type="hidden" name="starter" value="{{ user.username }}" class="starter">
   <div class="ui primary submit button">发帖</div>
 
 
@@ -42,8 +42,10 @@
 
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script>
+    $.ajaxSetup({
+　　      data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+    });
     //http://api.jquery.com/jQuery.ajax/
-    var url = "http://localhost:8000", token = "gwLTE1MDM1NTI4OTUtMGM3ZWY2ZGFkMmMzNGYxNDk1ZmUwOTc1MGQ1MTM1YTc=bGl4aWFuZz";
     //初始化SimpleMDE
     var simplemde = new SimpleMDE({
         autosave: {
@@ -70,14 +72,23 @@
     });
     //store
     $(".submit").on('click', function () {
-        console.log(simplemde.value());
+        var uploadFormData = {
+            title: $(".title").val(),
+            starter: $(".starter").val(),
+            detail: simplemde.value(),
+        }
         $.ajax({
             method: "POST",
-            url: url + '/new',
-            data: {name: $("#name").val(), detail: simplemde.value()},
-            headers: {token: token}
-        }).done(function (result) {
-            alert(result.msg);
+            url: '{% url 'forum:new' %}',
+            data: uploadFormData,
+            {#data: uploadFormData,#}
+            success: function (data) {
+                if(data.success == true){
+                    window.location.href = "{% url 'forum:index' %}";
+                } else {
+                    alert(data.msg);
+                }
+            }
         });
     });
 </script>
