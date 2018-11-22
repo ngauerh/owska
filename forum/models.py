@@ -40,7 +40,7 @@ class Topic(models.Model):
     starter = models.ForeignKey(User, related_name='topics', on_delete=models.CASCADE)
     last_updated = models.DateTimeField(auto_now_add=True)
     board = models.ForeignKey(Board, related_name='topics', on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tag, max_length=100, blank=True)
+    # tags = models.ManyToManyField(Tag, max_length=100, blank=True)
     views = models.PositiveIntegerField(default=0)  # 浏览量
 
     def __str__(self):
