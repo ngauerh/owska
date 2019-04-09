@@ -29,8 +29,8 @@ class MyRedis(object):
     def str_set(self, k, v, time=None):
         self.r.set(k, v, time)
 
-    def push_list(self, k, *args):
-        self.r.lpush(k, args)
+    def push_list(self, k, v):
+        self.r.lpush(k, v)
         self.r.expire(k, 900)
 
     def range_list(self, k, stime, etime):
@@ -70,6 +70,7 @@ class Register(View):
                 MyRedis().push_list(username, name)
                 MyRedis().push_list(username, email)
                 MyRedis().push_list(username, password)
+                # MyRedis().push_list(username, username,name,email,password,password)
 
                 serializer = Serializer(settings.SECRET_KEY, 3600 * 7)
                 info = {'confirm': username}
@@ -96,6 +97,7 @@ class ActiveView(View):
             info = serializer.loads(token)
             # 获取待激活用户名
             username = info['confirm']
+            print(username)
             u.password = MyRedis().range_list(username, 0, 1)[0].lstrip("('").rstrip("',)")
             u.email = MyRedis().range_list(username, 1, 2)[0].lstrip("('").rstrip("',)")
             u.name = MyRedis().range_list(username, 2, 3)[0].lstrip("('").rstrip("',)")
@@ -129,10 +131,6 @@ class SignIn(View):
         if check_password(password, pw.password):
             user = auth.authenticate(username=username, password=password)
             auth.login(request, user)
-
-            # request.session['username'] = username
-            # request.session['uid'] = pw.id
-            # request.session['avatar'] = str(pw.avatar)
             return redirect(reverse('forum:index'))
         else:
             context = {'info': '密码错误'}

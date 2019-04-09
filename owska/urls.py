@@ -29,8 +29,9 @@ else:
     admin_prefix = r'%s/' % 'admin'
 
 urlpatterns = [
-    path(admin_prefix, admin.site.urls),
+    path(OWSKA_ADMIN_PATH, admin.site.urls),
     path('users/', include("users.urls")),
     path('users/', include('django.contrib.auth.urls')),
     path('', include('forum.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
