@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import auth
 import redis
-import random
+from django.contrib.auth.decorators import login_required
 import io
 from django.http import HttpResponse
 from django.views.generic.base import View
@@ -85,7 +85,6 @@ class Register(View):
 
 
 # 激活
-
 class ActiveView(View):
     @staticmethod
     def get(request, token):
@@ -97,7 +96,6 @@ class ActiveView(View):
             info = serializer.loads(token)
             # 获取待激活用户名
             username = info['confirm']
-            print(username)
             u.password = MyRedis().range_list(username, 0, 1)[0].lstrip("('").rstrip("',)")
             u.email = MyRedis().range_list(username, 1, 2)[0].lstrip("('").rstrip("',)")
             u.name = MyRedis().range_list(username, 2, 3)[0].lstrip("('").rstrip("',)")
@@ -137,15 +135,29 @@ class SignIn(View):
             return render(request, 'login.html', context)
 
 
+# 忘记密码
+class ForgetPassword(View):
+    @staticmethod
+    def get(request):
+        serializer = Serializer(settings.SECRET_KEY, 3600 * 7)
+        email = request.POST.get('email')
+        info = {'forgetpassword': email}
+        token = serializer.dumps(info)
+        token = token.decode()
+        send_active_email(token, email)
+        context = {'info': '重置密码链接已发往{},请赶快重置密码'.format(email)}
+        return render(request, 'info.html', context)
+
+
 # 登出
+@login_required
 def logout(request):
-    # del request.session['username']
-    # del request.session['uid']
     auth.logout(request)
     return redirect(reverse('forum:index'))
 
 
 # 用户信息
+@login_required
 def member_info(request, username):
     return render(request, 'users/member.html')
 
@@ -153,13 +165,15 @@ def member_info(request, username):
 # 修改头像
 class ChangeAvatar(View):
     @staticmethod
+    @login_required
     def get(request):
         return render(request, 'users/change_info.html')
 
     @staticmethod
+    @login_required
     def post(request):
         avatar = request.FILES['avatar']
-        ob = User.objects.get(id=request.session['uid'])
+        ob = User.objects.get(id=request.user.id)
         ob.avatar = avatar
         ob.save()
         crop_image(os.path.join('media', str(ob.avatar)))

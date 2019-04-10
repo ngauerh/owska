@@ -5,7 +5,6 @@ import uuid
 import time
 import hashlib
 import random
-# https://blog.csdn.net/weixin_42134789/article/details/80753051
 
 
 def user_directory_path(instance, filename):
@@ -16,9 +15,14 @@ def user_directory_path(instance, filename):
     return os.path.join("avatars", f2, f1, instance.name, filename)
 
 
+def default_avatars():
+    filename = str(random.randint(1, 10)) + '.png'
+    return os.path.join('avatars/default', filename)
+
+
 class User(AbstractUser):
     name = models.CharField(max_length=50, blank=True)
-    avatar = models.ImageField(null=True, upload_to=user_directory_path)  # 头像
+    avatar = models.ImageField(null=True, upload_to=user_directory_path,default=default_avatars)  # 头像
 
     class Meta(AbstractUser.Meta):
         pass
