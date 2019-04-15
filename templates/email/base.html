@@ -1,6 +1,5 @@
-{% load misago_absoluteurl %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="initial-scale=1.0">    <!-- So that mobile webkit will display zoomed in -->
@@ -41,37 +40,37 @@
     <td align="center" valign="top" bgcolor="#eff0f1" style="background-color: #eff0f1;">
 
       <!-- 600px container (white background) -->
-      <table border="0" width="600" cellpadding="0" cellspacing="0" class="container" bgcolor="#ffffff">
+      <table border="0" width="600" cellpadding="0" cellspacing="0" class="container" bgcolor="#ffffff" height="100%">
         <tr>
           <td class="container-padding" bgcolor="#ffffff" style="background-color: #ffffff; border: 1px solid #dde0e2; padding-left: 30px; padding-right: 30px; font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif; color: #333; padding-top: 4px;" align="left">
             <br>
-
+            <div style="height: 70px; width: 100%"></div>
             <!-- ### BEGIN CONTENT ### -->
 
               <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td valign="middle" style="font-size: 28px; line-height: 24px; color: #555555;">{{ misago_settings.forum_name }}</td>
-                  <td align="center" valign="middle" width="30"><img src="{% absoluteurl 'misago:user-avatar' pk=user.pk size=32 %}" width="32" height="32" style="border-radius: 3px;" alt=""></td>
+                  <td valign="middle" style="font-size: 28px; line-height: 24px; color: #555555;">{{ owska_settings.name }}</td>
                 </tr>
               </table>
             <br>
 
-            <div style="font-weight: bold; font-size: 18px; line-height: 24px; color: #333; border-top: 1px solid #ddd;"><br>{% block title %}{{ subject }}{% endblock %}</div>
+            <div style="font-weight: bold; font-size: 18px; line-height: 24px; color: #333; border-top: 1px solid #ddd;"><br>{{ subject }}</div>
             <br>
-
-            {% block content %}{% endblock content %}
-
-            <br>
+            {{ content|safe }}
+            <br><br>
             <div style="border-top: 1px solid #ddd; color: #666; font-size: 12px; line-height: 18px;">
-              {% if misago_settings.email_footer %}<br>{{ misago_settings.email_footer }}{% endif %}
-              <br><a href="{{ SITE_ADDRESS }}" style="color: #888; text-decoration: underline;">Sent from {{ SITE_HOST }}</a>
+              <br><a href="{{ owska_settings.address }}" style="color: #888; text-decoration: underline;">Sent from {{ owska_settings.name }}</a>
             </div>
 
             <!-- ### END CONTENT ### -->
             <br>
 
+            <div style="height: 70px; width: 100%"></div>
+
           </td>
+
         </tr>
+
       </table>
       <!--/600px container -->
 

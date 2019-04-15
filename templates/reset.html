@@ -12,26 +12,27 @@
 <div class="ui grid">
 
 <div class="seven wide column centered">
-<form class="ui form segment" action="{% url 'users:sign_in' %}" method="post">
+<form class="ui form segment" action="{% url 'users:reset' res %}" method="post">
     {% csrf_token %}
-  <p>用户登陆</p>
-    <div class="field">
-      <input placeholder="用户名或电子邮箱地址" name="username" type="text">
-    </div>
-
+  <p>重置密码</p>
     <div class="field">
       <input placeholder="密码" type="password" name="password">
     </div>
 
     <div class="field">
+      <input placeholder="确认密码" type="password" name="confirm_password">
+    </div>
+
+    <input  type="hidden" name="confirm_password" value="{{ res }}">
+
+    <div class="field">
       <input placeholder="验证码" type="text" name="captcha" style="vertical-align:middle;width: 60%;margin-right: 10%">
       <img src="{% url 'users:captcha'%}" onclick="this.src='{% url 'users:captcha' %}?sn='+Math.random()" style="vertical-align:middle"/>
     </div>
-  <div class="ui primary submit button">登陆</div>
-  <a class="ui  button"href="{% url 'users:forget' %}">忘记密码</a>
+
+  <div class="ui primary submit button">提交</div>
     <a style="color: #e0b4b4">{{ info }}</a>
   <div class="ui error message"></div>
-
 </form>
 
 </div>
@@ -41,15 +42,6 @@
 $('.ui.form')
   .form({
     fields: {
-      username: {
-        identifier: 'username',
-        rules: [
-          {
-            type   : 'empty',
-            prompt : '请输入用户名'
-          }
-        ]
-      },
       password: {
         identifier: 'password',
         rules: [
@@ -60,6 +52,19 @@ $('.ui.form')
           {
             type   : 'minLength[1]',
             prompt : '密码最少需要 {ruleValue} 字符'
+          }
+        ]
+      },
+      confirm_password: {
+        identifier: 'confirm_password',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : '请输入密码'
+          },
+          {
+            type   : 'match[password]',
+            prompt : '两次输入的密码不一致'
           }
         ]
       },

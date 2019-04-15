@@ -3,7 +3,7 @@ from django.conf import settings
 from .forms import *
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
-from .backends import send_active_email
+from .backends import OwskaEmail
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import auth
@@ -40,6 +40,12 @@ class MyRedis(object):
     def del_list(self, k):
         self.r.delete(k)
 
+    def make_hash(self, name, key, value):
+        self.r.hset(name=name, key=key, value=value)
+
+    def del_hash(self, name):
+        self.r.delete(name)
+
 
 # 注册
 class Register(View):
@@ -66,17 +72,16 @@ class Register(View):
                 context = {'info': '邮箱已存在'}
                 return render(request, 'register.html', context)
             else:
-                MyRedis().push_list(username, username)
-                MyRedis().push_list(username, name)
-                MyRedis().push_list(username, email)
-                MyRedis().push_list(username, password)
-                # MyRedis().push_list(username, username,name,email,password,password)
+                MyRedis().push_list(email, username)
+                MyRedis().push_list(email, name)
+                MyRedis().push_list(email, email)
+                MyRedis().push_list(email, password)
 
                 serializer = Serializer(settings.SECRET_KEY, 3600 * 7)
-                info = {'confirm': username}
+                info = {'confirm': email}
                 token = serializer.dumps(info)
                 token = token.decode()
-                send_active_email(token, username, email)
+                OwskaEmail(token, username, email).send_active_email()
                 context = {'info': '注册链接已发往{},请赶快前往激活'.format(email)}
                 return render(request, 'info.html', context)
         else:
@@ -95,15 +100,15 @@ class ActiveView(View):
             u = User()
             info = serializer.loads(token)
             # 获取待激活用户名
-            username = info['confirm']
-            u.password = MyRedis().range_list(username, 0, 1)[0].lstrip("('").rstrip("',)")
-            u.email = MyRedis().range_list(username, 1, 2)[0].lstrip("('").rstrip("',)")
-            u.name = MyRedis().range_list(username, 2, 3)[0].lstrip("('").rstrip("',)")
-            u.username = username
+            email = info['confirm']
+            u.password = MyRedis().range_list(email, 0, 1)[0].lstrip("('").rstrip("',)")
+            u.email = MyRedis().range_list(email, 1, 2)[0].lstrip("('").rstrip("',)")
+            u.name = MyRedis().range_list(email, 2, 3)[0].lstrip("('").rstrip("',)")
+            u.username = MyRedis().range_list(email, 3, 4)[0].lstrip("('").rstrip("',)")
             # 将用户信息存入数据库
             u.save()
             # 删除token
-            MyRedis().del_list(username)
+            MyRedis().del_list(email)
             context = {'info': "激活成功"}
             return render(request, 'info.html', context)
         except:
@@ -119,13 +124,12 @@ class SignIn(View):
     @staticmethod
     def post(request):
         username = request.POST.get('username')
-        a = User.objects.filter(username=username)
-        if a:
-            pw = [i for i in a][0]
-        else:
+        pw = User.objects.filter(username=username).first()
+        if not pw:
             context = {'info': '账号不存在'}
             return render(request, 'login.html', context)
-        password = request.POST.get('password')
+        else:
+            password = request.POST.get('password')
         if check_password(password, pw.password):
             user = auth.authenticate(username=username, password=password)
             auth.login(request, user)
@@ -139,14 +143,52 @@ class SignIn(View):
 class ForgetPassword(View):
     @staticmethod
     def get(request):
+        return render(request, 'forget.html')
+
+    @staticmethod
+    def post(request):
         serializer = Serializer(settings.SECRET_KEY, 3600 * 7)
         email = request.POST.get('email')
-        info = {'forgetpassword': email}
-        token = serializer.dumps(info)
-        token = token.decode()
-        send_active_email(token, email)
-        context = {'info': '重置密码链接已发往{},请赶快重置密码'.format(email)}
-        return render(request, 'info.html', context)
+        username = User.objects.filter(email=email)
+        if not username:
+            context = {'info': '邮箱不存在'}
+            return render(request, 'forget.html', context)
+        else:
+            info = {'forgetpassword': email}
+            token = serializer.dumps(info)
+            token = token.decode()
+            OwskaEmail(token, username.first().username, email).send_forget_email()
+            context = {'info': '重置密码链接已发往{},请赶快重置密码'.format(email)}
+            return render(request, 'info.html', context)
+
+
+# 重置密码
+class ResetPassword(View):
+    @staticmethod
+    def get(request, token):
+        context = {'res': token}
+        return render(request, 'reset.html', context)
+
+    @staticmethod
+    def post(request, token):
+        """重置密码"""
+        serializer = Serializer(settings.SECRET_KEY, 3600 * 7)
+        try:
+            u = User()
+            info = serializer.loads(token)
+            # 获取待激活用户名
+            email = info['forgetpassword']
+            print(email)
+            u.password = MyRedis().range_list(email, 0, 1)[0].lstrip("('").rstrip("',)")
+            # 将用户信息存入数据库
+            u.save()
+            # 删除token
+            MyRedis().del_list(email)
+            context = {'info': "激活成功"}
+            return render(request, 'info.html', context)
+        except:
+            return HttpResponse('激活链接已失效')
+
 
 
 # 登出

@@ -17,9 +17,9 @@ class FriendlyLink(models.Model):
 
 
 class Siteinfo(models.Model):
-    title = models.CharField('网站标题', max_length=30)
+    name = models.CharField('网站标题', max_length=30)
     icon = models.ImageField('网站图标', upload_to='icon')
-    url = models.URLField('网站url', max_length=120)
+    address = models.URLField('网站url', max_length=120)
     description = models.TextField('网站简介', blank=True)
     privacy_policy = models.TextField('隐私政策', blank=True)
     terms_of_service = models.TextField('服务条款', blank=True)

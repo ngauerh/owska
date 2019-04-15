@@ -12,7 +12,7 @@ admin.site.site_title = "后台管理系统"
 
 @admin.register(Siteinfo)
 class SiteinfoAdmin(admin.ModelAdmin):
-    list_display = ('title', 'url')
+    list_display = ('name', 'address')
 
 
 @admin.register(FriendlyLink)
