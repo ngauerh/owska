@@ -99,7 +99,7 @@ class ActiveView(View):
             # 解密
             u = User()
             info = serializer.loads(token)
-            # 获取待激活用户名
+            # 获取待激活用户邮箱
             email = info['confirm']
             u.password = MyRedis().range_list(email, 0, 1)[0].lstrip("('").rstrip("',)")
             u.email = MyRedis().range_list(email, 1, 2)[0].lstrip("('").rstrip("',)")
@@ -158,6 +158,7 @@ class ForgetPassword(View):
             token = serializer.dumps(info)
             token = token.decode()
             OwskaEmail(token, username.first().username, email).send_forget_email()
+            MyRedis().push_list('forget_{}'.format(email), token)
             context = {'info': '重置密码链接已发往{},请赶快重置密码'.format(email)}
             return render(request, 'info.html', context)
 
@@ -174,21 +175,22 @@ class ResetPassword(View):
         """重置密码"""
         serializer = Serializer(settings.SECRET_KEY, 3600 * 7)
         try:
-            u = User()
             info = serializer.loads(token)
-            # 获取待激活用户名
+            # 判断用户提交的token是否被篡改
             email = info['forgetpassword']
-            print(email)
-            u.password = MyRedis().range_list(email, 0, 1)[0].lstrip("('").rstrip("',)")
-            # 将用户信息存入数据库
+            redis_info = MyRedis().range_list('forget_{}'.format(email), 0, 1)[0].lstrip("('").rstrip("',)")
+            if token != redis_info:
+                context = {'info': '重置密码出错，请重试'}
+                return render(request, 'info.html', context)
+            u = User.objects.filter(email=email).first()
+            u.password = make_password(request.POST.get('password'))
             u.save()
             # 删除token
-            MyRedis().del_list(email)
-            context = {'info': "激活成功"}
+            MyRedis().del_list('forget_{}'.format(email))
+            context = {'info': "重置密码成功，请重新登陆"}
             return render(request, 'info.html', context)
         except:
-            return HttpResponse('激活链接已失效')
-
+            return HttpResponse('重置密码出错，请重试')
 
 
 # 登出
