@@ -29,10 +29,10 @@ class Board(models.Model):
         return self.name
 
 
-# 主题
+# 帖子
 class Topic(models.Model):
     """
-    id, 标题，内容，发帖人，发帖时间，所属板块，标签
+    id, 标题，内容，发帖人，发帖时间，所属板块，标签, 浏览量
     """
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
@@ -44,10 +44,10 @@ class Topic(models.Model):
     views = models.PositiveIntegerField(default=0)  # 浏览量
 
     def __str__(self):
-        return self.subject
+        return self.title
 
 
-# 帖子
+# 回帖
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
     message = models.TextField(blank=False)  # 内容
