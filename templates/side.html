@@ -1,14 +1,15 @@
 {# 侧边栏 #}
 
-{% if user.is_authenticated %}
+
 <div class="five wide column" style="padding-top: 0%">
   <div class="ui card" style=";width: 100%">
+{#    <div class="content">#}
+{#    <img class="left floated mini ui image" src="{{ MEDIA_URL }}{{ request.session.avatar }}">#}
+{#    <div class="header">{{ request.session.username }}</div>#}
 
-  <div class="content" style="padding-bottom: 0%">
-      {% if user.avatar %}
-      <img class="left floated mini ui image" src="{{ MEDIA_URL }}{{ user.avatar }}">
-      {% endif %}
-    <div class="header">{{ user.username }}</div>
+  <div class="content">
+{#      <img class="left floated mini ui image" src="{{ MEDIA_URL }}{{ request.session.avatar }}">#}
+    <div class="header">{{ request.session.username }}</div>
   </div>
   <div class="content">
     <h4 class="ui sub header">Activity</h4>
@@ -45,33 +46,4 @@
   </div>
 </div>
 
-{% else %}
-
-    <div class="five wide column" style="padding-top: 0%">
-  <div class="ui card" style=";width: 100%">
-
-
-  <div class="content">
-    <h4 class="ui sub header">Activity</h4>
-    <div class="ui small feed">
-      <div class="event">
-        <div class="content">
-          <div class="summary">
-             <a class="ui button" href="{% url 'users:register' %}">注册账号</a>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <div class="extra content">
-    已有账号请  &nbsp;&nbsp;<a href="{% url 'users:sign_in' %}">登陆</a>
-  </div>
-
-
-  </div>
-  </div>
-</div>
-
-{% endif %}
 

@@ -22,18 +22,16 @@ class NewTopic(View):
     @staticmethod
     @login_required
     def post(request):
-        title = request.POST['title']
-        content = request.POST['detail']
-        starter = request.POST['starter']
-        board = request.POST['board']
-        view = 0
-        if True:
-            res = {"success": True, "msg": "发送成功"}
-        else:
-            res = {"success": False, "msg": "发送失败"}
-
+        # print(request.POST['detail'])
+        print(request.POST['title'])
+        res = {"success": True, "msg": "成功"}
         return HttpResponse(json.dumps(res), content_type="application/json")
-
+        # form = TopicForm(request.POST)
+        # if form.is_valid():
+        #     form.save()
+        #     res = {"success": True, "msg": "成功"}
+        #     return HttpResponse(json.dumps(res), content_type="application/json")
+        # return render(request, 'topic/new_topic.html')
 
 
 # 节点

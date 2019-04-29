@@ -83,12 +83,7 @@
     {% if user.is_authenticated %}
         <div class="ui compact menu">
           <div class="ui simple dropdown item">
-              {% if user.avatar %}
-              <img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="">
-                  {% else %}
-                  {{ user.username }}
-              {% endif %}
-
+            <img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="">
             <div class="menu">
               <div class="item">{{ user.username }}</div>
               <div class="item"><a href="{% url 'users:member_info' user.username %}"><i class="user icon"></i>个人主页</a></div>

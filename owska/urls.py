@@ -21,16 +21,17 @@ from django.conf import settings
 try:
     from .settings import OWSKA_ADMIN_PATH
 except ImportError:
-    OWSKA_ADMIN_PATH = 'admin'
+    OWSKA_ADMIN_PATH = 'admin/'
 
 if len(OWSKA_ADMIN_PATH) != 0:
-    admin_prefix = r'%s/' % OWSKA_ADMIN_PATH
+    admin_prefix = '%s/' % OWSKA_ADMIN_PATH
 else:
-    admin_prefix = r'%s/' % 'admin'
+    admin_prefix = '%s/' % 'admin'
 
 urlpatterns = [
     path(admin_prefix, admin.site.urls),
     path('users/', include("users.urls")),
     path('users/', include('django.contrib.auth.urls')),
     path('', include('forum.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
