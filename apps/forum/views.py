@@ -26,7 +26,8 @@ class NewTopic(View):
     @staticmethod
     @login_required
     def get(request):
-        return render(request, 'topic/new_topic.html',)
+        obj = BoardList()
+        return render(request, 'topic/new_topic.html', {"obj": obj})
 
     @staticmethod
     @login_required
