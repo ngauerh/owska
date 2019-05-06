@@ -7,6 +7,7 @@ from .serializer import *
 import json
 from .forms import *
 from .models import *
+from users.models import User
 
 
 def index(requests):
@@ -25,16 +26,22 @@ class NewTopic(View):
     @staticmethod
     @login_required
     def get(request):
-        return render(request, 'topic/new_topic.html')
+        return render(request, 'topic/new_topic.html',)
 
     @staticmethod
     @login_required
     def post(request):
         form = TopicForm(request.POST)
         if form.is_valid():
-            form.save()
+            t = form.save(commit=False)
+            t.starter_id = User.objects.filter(id=request.user.id).first().id
+            t.tags_id = 1
+            t.save()
             res = {"success": True, "msg": "成功"}
             return HttpResponse(json.dumps(res), content_type="application/json")
-        return render(request, 'topic/new_topic.html')
+        else:
+            print(form.errors)
+            return render(request, 'topic/new_topic.html')
+
 
 

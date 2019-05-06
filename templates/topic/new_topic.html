@@ -21,10 +21,11 @@
       <label>主题标题</label>
       <input placeholder="标题" name="title" type="text" class="title">
     </div>
+
     <div class="field">
       <label>选择节点</label>
-      <select class="ui search dropdown">
-      <option value="全部">全部</option>
+      <select class="ui search dropdown board" name="board">
+      <option value="1">全部</option>
       <option value="">Alabama</option>
       <option value="">Alaska</option>
       </select>
@@ -34,7 +35,6 @@
       <textarea id="detail" name="content"></textarea>
     </div>
   <div class="ui primary submit button">发帖</div>
-
 
 </form>
 
@@ -74,7 +74,8 @@
         var uploadFormData = {
             title: $(".title").val(),
             starter: $(".starter").val(),
-            detail: simplemde.value(),
+            board: $(".board").val(),
+            content: simplemde.value(),
         }
         $.ajax({
             method: "POST",
