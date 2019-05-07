@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+
+{% block body  %}
+    {{ t.title }}
+    {{ t.get_reply_as_markdown|safe  }}
+{% endblock %}

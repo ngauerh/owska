@@ -1,7 +1,8 @@
 from django.db import models
 from users.models import User
 from django.utils.text import Truncator
-
+from markdown import markdown
+from django.utils.html import mark_safe
 
 # https://blog.csdn.net/devil_2009/article/details/41735611
 
@@ -42,9 +43,13 @@ class Topic(models.Model):
     board = models.ForeignKey(Board, related_name='topics', on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, max_length=100, blank=True)
     views = models.PositiveIntegerField(default=0)  # 浏览量
+    path = models.CharField('路径', max_length=250, unique=True)
 
     def __str__(self):
-        return self.subject
+        return self.title
+
+    def get_reply_as_markdown(self):
+        return mark_safe(markdown(self.content, safe_mode='escape'))
 
 
 # 帖子

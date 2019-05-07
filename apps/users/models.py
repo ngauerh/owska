@@ -22,7 +22,8 @@ def default_avatars():
 
 class User(AbstractUser):
     name = models.CharField(max_length=50, blank=True)
-    avatar = models.ImageField(null=True, upload_to=user_directory_path,default=default_avatars)  # 头像
+    avatar = models.ImageField(null=True, upload_to=user_directory_path, default=default_avatars)  # 头像
 
     class Meta(AbstractUser.Meta):
         pass
+

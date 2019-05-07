@@ -1,49 +1,25 @@
-{# 侧边栏 #}
-
-
-<div class="five wide column" style="padding-top: 0%">
-  <div class="ui card" style=";width: 100%">
-{#    <div class="content">#}
-{#    <img class="left floated mini ui image" src="{{ MEDIA_URL }}{{ request.session.avatar }}">#}
-{#    <div class="header">{{ request.session.username }}</div>#}
-
-  <div class="content">
-{#      <img class="left floated mini ui image" src="{{ MEDIA_URL }}{{ request.session.avatar }}">#}
-    <div class="header">{{ request.session.username }}</div>
-  </div>
-  <div class="content">
-    <h4 class="ui sub header">Activity</h4>
-    <div class="ui small feed">
-      <div class="event">
-        <div class="content">
-          <div class="summary">
-             <a>Elliot Fu</a> added <a>Jenny Hess</a> to the project
-          </div>
-        </div>
+<div class="ui cards">
+  <div class="card" style="width: 100%">
+    <div class="content">
+      <img class="right floated mini ui image" src="{{ MEDIA_URL }}{{ user.avatar }}">
+      <div class="header">
+        {{ user.name }}
       </div>
-      <div class="event">
-        <div class="content">
-          <div class="summary">
-             <a>Stevie Feliciano</a> was added as an <a>Administrator</a>
-          </div>
-        </div>
+      <div class="meta">
+        Friends of Veronika
       </div>
-      <div class="event">
-        <div class="content">
-          <div class="summary">
-             <a>Helen Troy</a> added two pictures
-          </div>
-        </div>
+      <div class="description">
+        Elliot requested permission to view your contact details
+      </div>
+
+
+    </div>
+    <div class="extra content">
+      <div class="ui two buttons">
+        <a class="ui basic green button" href="{% url 'forum:new' %}">创作新主题</a>
+        <div class="ui basic red button">Decline</div>
       </div>
     </div>
   </div>
-  <div class="extra content">
-    <a class="ui button" href="{% url 'forum:new' %}">创作新主题</a>
-  </div>
-
-
-  </div>
-  </div>
 </div>
-
 

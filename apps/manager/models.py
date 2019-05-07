@@ -3,7 +3,7 @@ from django.db import models
 
 class FriendlyLink(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField('标题', max_length=30)
+    name = models.CharField('标题', max_length=30)
     url = models.URLField('链接')
     message = models.TextField('备注', blank=True)
     create_at = models.DateTimeField('添加时间')

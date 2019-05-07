@@ -17,7 +17,7 @@ class SiteinfoAdmin(admin.ModelAdmin):
 
 @admin.register(FriendlyLink)
 class FriendlyLinkAdmin(admin.ModelAdmin):
-    list_display = ('title', 'url')
+    list_display = ('name', 'url')
 
 
 

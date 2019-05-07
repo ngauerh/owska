@@ -1,4 +1,4 @@
-<div style="background-color: white;padding-left: 5%;padding-right: 5%;margin-bottom: -70px" >
+<div style="background-color: white;margin-bottom: 50px" >
 <div class="ui secondary menu">
   <a class="header item" href="/">Brand</a>
   <a class="item">Link</a>
@@ -15,7 +15,7 @@
     {% if user.is_authenticated %}
         <div class="ui compact menu"  style="margin-right: 5%">
           <div class="ui simple dropdown item">
-            <img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="">
+            <img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="{{ user.name }}">
             <div class="menu">
               <div class="item">{{ user.username }}</div>
               <div class="item"><a href="{% url 'users:member_info' user.username %}"><i class="user icon"></i>个人主页</a></div>
