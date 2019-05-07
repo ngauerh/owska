@@ -1,4 +1,5 @@
 {% load static from staticfiles %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +24,35 @@
   {% endblock %}
 
   <script>
+  $(document)
+    .ready(function() {
+      $('.ui.menu .ui.dropdown').dropdown({
+        on: 'hover'
+      });
+      $('.ui.menu a.item')
+        .on('click', function() {
+          $(this)
+            .addClass('active')
+            .siblings()
+            .removeClass('active')
+          ;
+        })
+      ;
+    })
+  ;
+  $('.change-avatar')
+      .on('click', function () {
+          console.log('123123123')
+          $(this)
+            {#.modal('active')#}
+          $('.ui.modal')
 
+           .addClass('active')
+        ;
+      })
+
+
+ ;
   </script>
 
 </head>
