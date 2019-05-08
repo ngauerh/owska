@@ -4,92 +4,93 @@
     <link rel="stylesheet" href="https://simplemde.com/stylesheets/stylesheet.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <style>
-        .CodeMirror {height: 500px;/*SimpleMDE的高度*/}
+        .CodeMirror {
+            height: 500px; /*SimpleMDE的高度*/
+        }
     </style>
 {% endblock %}
 
 
 {% block body %}
-<div class="ui grid">
+    <div class="ui grid">
 
-<div class="thirteen wide column centered">
+        <div class="thirteen wide column centered">
 
-<form class="ui form segment TopicForm"  method="post">
-    {% csrf_token %}
-  <p>创作新主题</p>
-    <div class="field">
-      <label>主题标题</label>
-      <input placeholder="标题" name="title" type="text" class="title">
+            <form class="ui form segment TopicForm" method="post">
+                {% csrf_token %}
+                <p>创作新主题</p>
+                <div class="field">
+                    <label>主题标题</label>
+                    <input placeholder="标题" name="title" type="text" class="title">
+                </div>
+
+                <div class="field">
+                    <label>选择节点</label>
+                    {{ obj.board }}
+                </div>
+                <div class="field">
+                    <label>主题正文</label>
+                    <textarea id="detail" name="content"></textarea>
+                </div>
+                <div class="ui primary submit button">发帖</div>
+
+            </form>
+
+
+            <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+            <script>
+                $.ajaxSetup({
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                });
+                //http://api.jquery.com/jQuery.ajax/
+                //初始化SimpleMDE
+                var simplemde = new SimpleMDE({
+                    autosave: {
+                        enabled: false,
+                        uniqueId: "MyUniqueID",
+                        delay: 1000
+                    },
+                    status: ["autosave", "lines", "words"],
+                    spellChecker: false,
+                    element: document.getElementById("detail"),
+                    promptURLs: true,
+                    toolbar: [
+                        "bold", "italic", "strikethrough", "heading", "code", "quote", "unordered-list",
+                        "ordered-list", "clean-block", "link", "image", "table", "horizontal-rule", "preview", "side-by-side", "fullscreen", "guide",
+                        {
+                            name: "uploadImage",//自定义按钮
+                            action: function customFunction(editor) {
+                                console.log(editor);
+                            },
+                            className: "fa fa-star",
+                            title: "Upload Image"
+                        }
+                    ]
+                });
+                //store
+                $(".submit").on('click', function () {
+                    var uploadFormData = {
+                        title: $(".title").val(),
+                        starter: $(".starter").val(),
+                        board: $("#id_board").val(),
+                        content: simplemde.value(),
+                    }
+                    $.ajax({
+                        method: "POST",
+                        url: '{% url 'forum:new' %}',
+                        data: uploadFormData,
+                        success: function (data) {
+                            if (data.success == true) {
+                                window.location.href = "{% url 'forum:index' %}";
+                            } else {
+                                alert(data.msg);
+                            }
+                        }
+                    });
+                });
+            </script>
+
+        </div>
     </div>
-
-    <div class="field">
-      <label>选择节点</label>
-        {{ obj.board }}
-    </div>
-    <div class="field">
-      <label>主题正文</label>
-      <textarea id="detail" name="content"></textarea>
-    </div>
-  <div class="ui primary submit button">发帖</div>
-
-</form>
-
-
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<script>
-    $.ajaxSetup({
-　　      data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
-    });
-    //http://api.jquery.com/jQuery.ajax/
-    //初始化SimpleMDE
-    var simplemde = new SimpleMDE({
-        autosave: {
-            enabled: true,
-            uniqueId: "MyUniqueID",
-            delay: 1000
-        },
-        status: ["autosave", "lines", "words"],
-        spellChecker: false,
-        element: document.getElementById("detail"),
-        promptURLs: true,
-        toolbar: [
-            "bold", "italic", "strikethrough", "heading", "code", "quote", "unordered-list",
-            "ordered-list", "clean-block", "link", "image", "table", "horizontal-rule", "preview", "side-by-side", "fullscreen", "guide",
-            {
-                name: "uploadImage",//自定义按钮
-                action: function customFunction(editor) {
-                    console.log(editor);
-                },
-                className: "fa fa-star",
-                title: "Upload Image"
-            }
-        ]
-    });
-    //store
-    $(".submit").on('click', function () {
-        var uploadFormData = {
-            title: $(".title").val(),
-            starter: $(".starter").val(),
-            board: $("#id_board").val(),
-            content: simplemde.value(),
-        }
-        $.ajax({
-            method: "POST",
-            url: '{% url 'forum:new' %}',
-            data: uploadFormData,
-            {#data: uploadFormData,#}
-            success: function (data) {
-                if(data.success == true){
-                    window.location.href = "{% url 'forum:index' %}";
-                } else {
-                    alert(data.msg);
-                }
-            }
-        });
-    });
-</script>
-
-</div>
-</div>
 
 {% endblock %}

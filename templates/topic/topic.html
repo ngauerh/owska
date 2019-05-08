@@ -1,81 +1,158 @@
 {% extends 'base.html' %}
+
 {% load humanize %}
 
-{% block body  %}
-    <div class="ui large breadcrumb">
-      <a class="section" href="/">首页</a>
-      <i class="right chevron icon divider"></i>
-      <div class="active section">{{ t.board }}</div>
-    </div>
-    <br><br>
-    <div class="ui card" style="width: 95%;margin: 0px">
-      <div class="content">
-         <div class="right floated author">
-            <img class="ui avatar image" src="{{ MEDIA_URL }}{{ t.starter.avatar }}">
-         </div>
 
-        <div class="header">{{ t.title }}</div>
-        <small>
-            <a href="{% url 'users:member_info' t.starter %}">{{ t.starter }}</a> &nbsp;•&nbsp;
-            {{ t.last_updated|naturaltime }}
-        </small>
-      </div>
-    <div class="content">
-        <h4 class="ui sub header">Activity</h4>
-        <div class="ui small feed">
-            {{ t.get_reply_as_markdown|safe  }}
-        </div>
+{# 头部 #}
+{% block head %}
+    <title>{{ t.title }}</title>
+    <link rel="stylesheet" href="https://simplemde.com/stylesheets/stylesheet.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <style>
+        .CodeMirror {
+            height: 300px; /*SimpleMDE的高度*/
+        }
+
+        .sep20 {
+            height: 20px;
+        }
+    </style>
+{% endblock %}
+
+
+{# 主体 #}
+{% block body %}
+    <div class="ui card" style="width: 95%;margin: 0px">
+    <div class="content" style="background-color: #fAfAfA;padding: 10px">
+        <div class="ui large breadcrumb">
+        <a class="section" href="/">首页</a>
+        <i class="right chevron icon divider"></i>
+        <div class="active section">{{ t.board }}</div>
     </div>
-    <div class="extra content">
-          <div class="extra content">
+    </div>
+        <div class="content">
+            <div class="right floated author">
+                <img class="ui avatar image" src="{{ MEDIA_URL }}{{ t.starter.avatar }}">
+            </div>
+            <div class="header">{{ t.title }}</div>
+            <small>
+                <a href="{% url 'users:member_info' t.starter %}">{{ t.starter }}</a> &nbsp;•&nbsp;
+                {{ t.last_updated|naturaltime }}
+            </small>
+        </div>
+
+        <div class="content">
+            <h4 class="ui sub header">Activity</h4>
+            <div class="ui small feed">
+                {{ t.get_reply_as_markdown|safe }}
+            </div>
+        </div>
+        <div class="extra content">
+            <div class="extra content">
             <span class="left floated like">
               <i class="like icon"></i>
               Like
             </span>
-            <span class="right floated star">
+                <span class="right floated star">
               <i class="star icon"></i>
               Favorite
             </span>
-          </div>
+            </div>
+        </div>
     </div>
-</div>
-    <br><br>
-<div class="ui card" style="width: 95%;margin: 0px">
+    <div class="sep20"></div>
+    <div class="ui card" style="width: 95%;margin: 0px">
 
-  <div class="ui comments" style="width: 95%;margin: 0px;max-width: initial">
-  <h3 class="ui dividing header">Comments</h3>
-  <div class="comment">
-    <a class="avatar">
-      <img src="{{ MEDIA_URL }}{{ user.avatar }}">
-    </a>
-    <div class="content" >
-      <a class="author">Matt</a>
-      <div class="metadata">
-        <span class="date">Today at 5:42PM</span>
-      </div>
-      <div class="text">
-            从我还是个孩子起，我就想在足总杯上打进制胜进球，这种感觉真是太棒了，我永远都不会忘记。
-            我还记得我将球打进球门下角时，一瞬间我的情感难以控制，这场比赛代表着一切，这种感觉对我来说太棒了。
-            终场哨声响起的那一刻，我感到无比宽慰。自从2008年我来到阿森纳时起，我就想帮助球队赢得冠军，现在我们终于做到了。
-            那个进球于我而言意义重大，他是我取得最重大的成就之一。此后我们又两夺足总杯，
-            在其中一场决赛面对切尔西的比赛中我还有进球，这种感觉真是难以置信。
-            你看，自从我加盟俱乐部以来发生了这么多事。在球场上，我曾和一些世界级球员搭档，我们一起赢得奖杯。
-            而在场下，我现在也有了自己的家庭。与我第一次驾车驶进伦敦科尔尼基地停车场时相比，我所担负的责任已经发生了很大的变化。
-
-            我已经在这里待了11年了，在场上场下都发生了许多事。我在阿森纳获得了真正的成长。
-            能有机会在这家俱乐部效力这么长时间，我深表感激。
-
-            在这些年中，球迷们总是一如既往地支持我。我经历过低谷，但大部分时间我过得很顺利。
-            我在这待了这么长时间，球迷们对我不离不弃，我和他们的联系已经十分紧密。
-      </div>
-      <div class="actions">
-        <a class="reply">Reply</a>
-      </div>
+        <div class="ui comments" style="width: 100%;margin: 0px;max-width: initial;padding: 10px">
+            <h3 class="ui dividing header">{{ t.comment_num }}</h3>
+            {#  评论  #}
+            {% for c in comments %}
+                <div class="comment">
+                    <a class="avatar">
+                        <img src="{{ MEDIA_URL }}{{ c.author.avatar }}">
+                    </a>
+                    <div class="content">
+                        <a class="author">{{ c.author.name }}</a>
+                        <div class="metadata">
+                            <div class="date">{{ c.create_time|naturaltime }}</div>
+                            <div class="rating">
+                                <i class="star icon"></i>
+                                5 Faves
+                            </div>
+                        </div>
+                        <div class="text">
+                            {{ c.get_reply_as_markdown|safe }}
+                        </div>
+                        <div class="actions">
+                            <a class="reply">Reply</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-  </div>
-
-</div>
-</div>
-
-
+    <div class="sep20"></div>
+    <div class="ui card" style="width: 95%;margin: 0px">
+        <div class="ui comments" style="width: 100%;margin: 0px;max-width: initial;padding: 10px">
+            <h3 class="ui dividing header">添加一条新回复</h3>
+            <form class="ui reply form" method="post">
+                {% csrf_token %}
+                <div class="field">
+                    <textarea id="comment" name="content"></textarea>
+                </div>
+                <div class="ui primary submit labeled icon button">
+                    <i class="icon edit"></i> Add Comment
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script>
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+        });
+        //初始化SimpleMDE
+        var simplemde = new SimpleMDE({
+            autosave: {
+                enabled: false,
+                uniqueId: "MyUniqueID",
+                delay: 1000
+            },
+            status: ["autosave", "lines", "words"],
+            spellChecker: false,
+            element: document.getElementById("comment"),
+            promptURLs: true,
+            toolbar: [
+                "bold", "italic", "strikethrough", "heading", "code", "quote", "unordered-list",
+                "ordered-list", "clean-block", "link", "image", "table", "horizontal-rule", "preview", "side-by-side", "fullscreen", "guide",
+                {
+                    name: "uploadImage",//自定义按钮
+                    action: function customFunction(editor) {
+                        console.log(editor);
+                    },
+                    className: "fa fa-star",
+                    title: "Upload Image"
+                }
+            ]
+        });
+        //store
+        $(".submit").on('click', function () {
+            var uploadFormData = {
+                content: simplemde.value(),
+                topic: {{ t.id }}
+            }
+            $.ajax({
+                method: "POST",
+                url: '{% url 'forum:comments' %}',
+                data: uploadFormData,
+                success: function (data) {
+                    if (data.success == true) {
+                        window.location.reload();
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -4,7 +4,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
     <link rel="stylesheet" href="{% static 'css/semantic.min.css' %}">
     <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/semantic.min.js' %}"></script>
@@ -12,48 +11,48 @@
 
     {% endblock %}
 
-  <style>
-  body {
-        background-color: #e2e2e2;
-       }
+    <style>
+        body {
+            background-color: #e2e2e2;
+        }
 
-  </style>
-  {% block css %}
+    </style>
+    {% block css %}
 
 
-  {% endblock %}
+    {% endblock %}
 
-  <script>
-  $(document)
-    .ready(function() {
-      $('.ui.menu .ui.dropdown').dropdown({
-        on: 'hover'
-      });
-      $('.ui.menu a.item')
-        .on('click', function() {
-          $(this)
-            .addClass('active')
-            .siblings()
-            .removeClass('active')
-          ;
-        })
-      ;
-    })
-  ;
-  $('.change-avatar')
-      .on('click', function () {
-          console.log('123123123')
-          $(this)
-            {#.modal('active')#}
-          $('.ui.modal')
-
-           .addClass('active')
+    <script>
+        $(document)
+            .ready(function () {
+                $('.ui.menu .ui.dropdown').dropdown({
+                    on: 'hover'
+                });
+                $('.ui.menu a.item')
+                    .on('click', function () {
+                        $(this)
+                            .addClass('active')
+                            .siblings()
+                            .removeClass('active')
+                        ;
+                    })
+                ;
+            })
         ;
-      })
+        $('.change-avatar')
+            .on('click', function () {
+                console.log('123123123')
+                $(this)
+                {#.modal('active')#}
+                $('.ui.modal')
+
+                    .addClass('active')
+                ;
+            })
 
 
- ;
-  </script>
+        ;
+    </script>
 
 </head>
 <body>
@@ -67,14 +66,14 @@
     <div class="ui relaxed grid " style="margin-left: 0em;">
         <div class="eleven wide column" style="padding: 0%;">
             {#主体内容#}
-            {% block body  %}
+            {% block body %}
 
             {% endblock %}
         </div>
         <div class="five wide column" style="padding: 0%;">
             {#侧边栏#}
             {% block side %}
-             {% include 'side.html'%}
+                {% include 'side.html' %}
             {% endblock %}
         </div>
     </div>

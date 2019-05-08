@@ -1,6 +1,4 @@
-from django.forms import widgets
-
-from .models import Topic, Board
+from .models import Topic, Board, Comments
 from django import forms
 
 
@@ -18,6 +16,13 @@ class BoardList(forms.Form):
     def __init__(self, *args, **kwargs):
         super(BoardList, self).__init__(*args, **kwargs)
         self.fields['board'].widget.choices = Board.objects.all().values_list('id', 'name')
+
+
+class CommentsForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ('content', 'topic')
+
 
 
 
