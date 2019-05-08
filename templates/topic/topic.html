@@ -23,13 +23,13 @@
 {# 主体 #}
 {% block body %}
     <div class="ui card" style="width: 95%;margin: 0px">
-    <div class="content" style="background-color: #fAfAfA;padding: 10px">
-        <div class="ui large breadcrumb">
-        <a class="section" href="/">首页</a>
-        <i class="right chevron icon divider"></i>
-        <div class="active section">{{ t.board }}</div>
-    </div>
-    </div>
+        <div class="content" style="background-color: #fAfAfA;padding: 10px">
+            <div class="ui large breadcrumb">
+                <a class="section" href="/">首页</a>
+                <i class="right chevron icon divider"></i>
+                <div class="active section">{{ t.board }}</div>
+            </div>
+        </div>
         <div class="content">
             <div class="right floated author">
                 <img class="ui avatar image" src="{{ MEDIA_URL }}{{ t.starter.avatar }}">
@@ -64,7 +64,11 @@
     <div class="ui card" style="width: 95%;margin: 0px">
 
         <div class="ui comments" style="width: 100%;margin: 0px;max-width: initial;padding: 10px">
-            <h3 class="ui dividing header">{{ t.comment_num }}</h3>
+            <span class="ui dividing " style="color: grey;font-size: 14px">
+                <span>{{ t.comment_num }} 回复</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <span>直到 2019-05-08 22:16:54</span>
+            </span>
+            <hr>
             {#  评论  #}
             {% for c in comments %}
                 <div class="comment">

@@ -1,25 +1,123 @@
 <div class="ui cards">
-  <div class="card" style="width: 100%">
-    <div class="content">
-      <img class="right floated mini ui image" src="{{ MEDIA_URL }}{{ user.avatar }}">
-      <div class="header">
-        {{ user.name }}
-      </div>
-      <div class="meta">
-        Friends of Veronika
-      </div>
-      <div class="description">
-        Elliot requested permission to view your contact details
-      </div>
+    {% if user.is_authenticated %}
+        <div class="card" style="width: 100%">
+            <div class="content">
+                <img class="right floated mini ui image" src="{{ MEDIA_URL }}{{ user.avatar }}">
+                <div class="header">
+                    <a href="{% url 'users:member_info' user.username %}">
+                        {{ user.name }}
+                    </a>
+                </div>
+                <div class="meta">
+                    今日活跃度排名 4364
+                </div>
+            </div>
+            <div class="extra content">
+                <table class="ui very basic table">
+                    <tbody>
+                    <tr>
+                        <td style="padding: 0px">
+                            <span style="text-align: center;display:block;">0</span>
+                            <div class="sep3"></div>
+                            <span style="text-align: center;display:block;">节点收藏</span>
+                        </td>
+                        <td style="padding: 0px">
+                            <span style="text-align: center;display:block;">0</span>
+                            <div class="sep3"></div>
+                            <span style="text-align: center;display:block;">主题收藏</span>
+                        </td>
+                        <td style="padding: 0px">
+                            <span style="text-align: center;display:block;">0</span>
+                            <div class="sep3"></div>
+                            <span style="text-align: center;display:block;">特别关注</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="extra content">
+                <div class="ui two buttons">
+                    <a class="ui basic green button" href="{% url 'forum:new' %}">创作新主题</a>
+                    <div class="ui basic red button">今日签到</div>
+                </div>
+            </div>
+            <div class="extra content">
+                0条消息未读
+            </div>
+        </div>
+    {% else %}
 
 
-    </div>
-    <div class="extra content">
-      <div class="ui two buttons">
-        <a class="ui basic green button" href="{% url 'forum:new' %}">创作新主题</a>
-        <div class="ui basic red button">Decline</div>
-      </div>
-    </div>
-  </div>
+        <div class="card" style="width: 100%">
+
+            <form class="ui form segment" action="{% url 'users:sign_in' %}" method="post">
+                {% csrf_token %}
+                <p>用户登陆</p>
+                <div class="field">
+                    <input placeholder="用户名或电子邮箱地址" name="username" type="text">
+                </div>
+
+                <div class="field">
+                    <input placeholder="密码" type="password" name="password">
+                </div>
+
+                <div class="field">
+                    <input placeholder="验证码" type="text" name="captcha"
+                           style="vertical-align:middle;width: 60%;margin-right: 10%">
+                    <div class="sep5"></div>
+                    <img src="{% url 'users:captcha' %}"
+                         onclick="this.src='{% url 'users:captcha' %}?sn='+Math.random()"
+                         style="vertical-align:middle"/>
+                </div>
+                <div class="ui primary submit button">登陆</div>
+                <a class="ui  button" href="{% url 'users:forget' %}">忘记密码</a>
+                <a style="color: #e0b4b4">{{ info }}</a>
+                <div class="ui error message"></div>
+
+            </form>
+
+        </div>
+        <script>
+
+            $('.ui.form')
+                .form({
+                    fields: {
+                        username: {
+                            identifier: 'username',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: '请输入用户名'
+                                }
+                            ]
+                        },
+                        password: {
+                            identifier: 'password',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: '请输入密码'
+                                },
+                                {
+                                    type: 'minLength[1]',
+                                    prompt: '密码最少需要 {ruleValue} 字符'
+                                }
+                            ]
+                        },
+                        captcha: {
+                            identifier: 'captcha',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: '请输入验证码'
+                                }
+                            ]
+                        },
+                    }
+                })
+            ;
+
+        </script>
+    {% endif %}
 </div>
 

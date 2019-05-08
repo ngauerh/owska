@@ -5,7 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/semantic.min.css' %}">
-    <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    {#    <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'js/semantic.min.js' %}"></script>
     {% block head %}
 
@@ -16,52 +17,42 @@
             background-color: #e2e2e2;
         }
 
+        .sep3 {
+            height: 3px;
+        }
+
+        .sep5 {
+            height: 5px;
+        }
+
+        .form {
+            padding: 0px;
+        }
+
+        a:link, a:active {
+            color: #666666;
+            text-decoration: none;
+
+        }
+
+        a:visited, a:hover {
+            color: #666666;
+            text-decoration: underline;
+        }
     </style>
     {% block css %}
 
 
     {% endblock %}
 
-    <script>
-        $(document)
-            .ready(function () {
-                $('.ui.menu .ui.dropdown').dropdown({
-                    on: 'hover'
-                });
-                $('.ui.menu a.item')
-                    .on('click', function () {
-                        $(this)
-                            .addClass('active')
-                            .siblings()
-                            .removeClass('active')
-                        ;
-                    })
-                ;
-            })
-        ;
-        $('.change-avatar')
-            .on('click', function () {
-                console.log('123123123')
-                $(this)
-                {#.modal('active')#}
-                $('.ui.modal')
-
-                    .addClass('active')
-                ;
-            })
-
-
-        ;
-    </script>
 
 </head>
 <body>
-
-<div style="margin-left: 5%;margin-right: 5%">
-    {#标题栏#}
-    {% block nav %}
-        {% include 'navbar.html' %}
-    {% endblock %}
+{#标题栏#}
+{% block nav %}
+    {% include 'navbar.html' %}
+{% endblock %}
+<div style="margin-left: 8%;margin-right: 8%">
 
     <div class="ui relaxed grid " style="margin-left: 0em;">
         <div class="eleven wide column" style="padding: 0%;">
@@ -70,7 +61,7 @@
 
             {% endblock %}
         </div>
-        <div class="five wide column" style="padding: 0%;">
+        <div class="five wide column" style="padding: 0px;">
             {#侧边栏#}
             {% block side %}
                 {% include 'side.html' %}
@@ -78,6 +69,8 @@
         </div>
     </div>
 </div>
-
+{% block footer %}
+    {% include 'footer.html' %}
+{% endblock %}
 </body>
 </html>
