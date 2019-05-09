@@ -64,11 +64,24 @@
     <div class="ui card" style="width: 95%;margin: 0px">
 
         <div class="ui comments" style="width: 100%;margin: 0px;max-width: initial;padding: 10px">
-            <span class="ui dividing " style="color: grey;font-size: 14px">
+            {% if t.comment_num %}
+                <span class="ui dividing " style="color: grey;font-size: 14px">
                 <span>{{ t.comment_num }} 回复</span>&nbsp;&nbsp;|&nbsp;&nbsp;
                 <span>直到 2019-05-08 22:16:54</span>
             </span>
-            <hr>
+                <hr>
+            {% else %}
+                <div class="ui middle feed">
+                    <div class="event">
+                        <div class="content">
+                            <div class="summary" style="text-align: center;color: dimgrey">
+                                目前尚无回复
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             {#  评论  #}
             {% for c in comments %}
                 <div class="comment">

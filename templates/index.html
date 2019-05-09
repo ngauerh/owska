@@ -14,8 +14,6 @@
             font-size: 5px;
         }
 
-
-
         .topic_name a {
             font-size: 16px;
             color: #778087;
@@ -27,10 +25,23 @@
 {# 主体 #}
 {% block body %}
 
+    <div class="ui card" style="width: 95%;margin: 0px">
 
-    {% for topic in topic_list %}
+        <div class="ui   segment" style="border: unset;margin: unset;padding: 5px">
+            <div class="ui   secondary menu ">
+                <a class="item" href="/">全部</a>
+                <a class="item">最热</a>
+                <a class="item" href="/">Python</a>
+                <a class="item" href="/">问与答</a>
+                <a class="item" href="/">创意</a>
+                <a class="item" href="/">好玩</a>
+                <a class="item" href="/">交易</a>
+                <a class="item" href="/">关注</a>
+            </div>
+        </div>
+        {% for topic in topic_list %}
 
-        <div class="ui card" style="width: 95%;margin: 0px">
+
             <div class="content" style="padding-left: 0%;position: relative; /">
                 <img class="left floated  ui image" style="height: 48px;margin-bottom: 0px"
                      src="{{ MEDIA_URL }}{{ topic.starter.avatar }}">
@@ -47,11 +58,26 @@
                 </div>
             </div>
 
-        </div>
-
-    {% endfor %}
 
 
+        {% endfor %}
 
+    </div>
+    <script>
+        $(document)
+            .ready(function () {
+                $('.ui.menu a.item')
+                    .on('click', function () {
+                        $(this)
+                            .addClass('active')
+                            {#.addClass('red')#}
+                            .siblings()
+                            .removeClass('active')
+                        ;
+                    })
+                ;
+            })
+        ;
+    </script>
 {% endblock %}
 
