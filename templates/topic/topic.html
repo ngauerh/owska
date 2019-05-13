@@ -17,6 +17,9 @@
             height: 20px;
         }
     </style>
+    <script>
+
+    </script>
 {% endblock %}
 
 
@@ -101,7 +104,7 @@
                             {{ c.get_reply_as_markdown|safe }}
                         </div>
                         <div class="actions">
-                            <a class="reply">Reply</a>
+                            <a class="reply" href="#" onclick="reply('{{ c.author.name }}')">Reply</a>
                         </div>
                     </div>
                 </div>
@@ -118,11 +121,14 @@
                     <textarea id="comment" name="content"></textarea>
                 </div>
                 <div class="ui primary submit labeled icon button">
-                    <i class="icon edit"></i> Add Comment
+                    <i class="icon edit"></i> 回复
                 </div>
             </form>
         </div>
     </div>
+    <script>
+
+    </script>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script>
         $.ajaxSetup({
@@ -172,4 +178,13 @@
             });
         });
     </script>
+
+    <script type="text/javascript">
+
+        function reply(n) {
+        simplemde.value('@' + n );
+    }
+
+</script>
+
 {% endblock %}

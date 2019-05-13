@@ -68,6 +68,10 @@ class TopicComments(View):
             t = f.save(commit=False)
             t.author_id = request.user.id
             t.save()
+            # 帖子评论数+1
+            c = Topic.objects.filter(id=request.POST['topic']).first()
+            c.comment_num += 1
+            c.save()
             res = {"success": True, "msg": "成功"}
             return HttpResponse(json.dumps(res), content_type="application/json")
         else:
