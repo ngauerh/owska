@@ -16,7 +16,15 @@ from django.utils.decorators import method_decorator
 
 # 首页
 def index(request):
-    topic_list = Topic.objects.select_related('starter', 'board').order_by('-pk')[:45]
+    tab = request.GET.get('tab')
+    if tab:
+        try:
+            bid = Board.objects.get(path=tab)
+            topic_list = Topic.objects.filter(board=bid.id).select_related('starter', 'board').order_by('-pk')[:45]
+        except:
+            topic_list = Topic.objects.select_related('starter', 'board').order_by('-pk')[:45]
+    else:
+        topic_list = Topic.objects.select_related('starter', 'board').order_by('-pk')[:45]
     return render(request, 'index.html', locals())
 
 
