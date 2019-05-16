@@ -26,7 +26,6 @@ def send_active_email(token, username, email):
     send_mail(subject, message, sender, receiver, html_message=html_message)
 
 
-
 class OwskaEmail:
     def __init__(self, token, username, email):
         self.token = token

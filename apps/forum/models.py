@@ -45,7 +45,7 @@ class Topic(models.Model):
     starter = models.ForeignKey(User, related_name='topics', on_delete=models.CASCADE)
     last_updated = models.DateTimeField(auto_now_add=True)
     board = models.ForeignKey(Board, related_name='topics', on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tag, max_length=100, blank=True)
+    tags = models.ManyToManyField(Tag, verbose_name='标签', max_length=100, blank=True)
     views = models.PositiveIntegerField(default=0)  # 浏览量
     comment_num = models.IntegerField(default=0)  # 评论数
     path = models.CharField('路径', max_length=250, unique=True)
@@ -80,6 +80,7 @@ class Comments(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(blank=False)
+    stars = models.IntegerField(default=0)
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:

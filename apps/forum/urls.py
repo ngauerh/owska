@@ -13,6 +13,7 @@ urlpatterns = [
     path('t/<str:path>/', topic, name='topic'),  # 主题帖
     path('b/<str:path>/', board_detail, name='board'),  # 板块
     path('api', include(router.urls)),  # 全部主题
-    path('comment', TopicComments.as_view(), name='comments')
+    path('comment', TopicComments.as_view(), name='comments'),
+    path('comment_stars', CommentStars.as_view(), name='cstars')
 
 ]

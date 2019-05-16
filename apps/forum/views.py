@@ -98,4 +98,14 @@ class TopicComments(View):
             print(f.errors)
 
 
+class CommentStars(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        s = Comments.objects.filter(id=request.POST['cid']).first()
+        s.stars += 1
+        s.save()
+        res = {"success": True, "msg": "成功"}
+        return HttpResponse(json.dumps(res), content_type="application/json")
+
+
 

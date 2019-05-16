@@ -87,6 +87,7 @@
 
             {#  评论  #}
             {% for c in comments %}
+
                 <div class="comment">
                     <a class="avatar">
                         <img src="{{ MEDIA_URL }}{{ c.author.avatar }}">
@@ -97,17 +98,21 @@
                             <div class="date">{{ c.create_time|naturaltime }}</div>
                             <div class="rating">
                                 <i class="star icon"></i>
-                                5 Faves
+                                {% if c.stars != 0 %}
+                                    {{ c.stars }}
+                                {% endif %}
+                            </div>
+                            <div class="actions">
+                                <a class="stars" href="#" onclick="stars('{{ c.id }}')">感谢</a>
+                                <a class="reply" href="#" onclick="reply('{{ c.author.name }}')">回复</a>
                             </div>
                         </div>
                         <div class="text">
                             {{ c.get_reply_as_markdown|safe }}
                         </div>
-                        <div class="actions">
-                            <a class="reply" href="#" onclick="reply('{{ c.author.name }}')">Reply</a>
-                        </div>
                     </div>
                 </div>
+                <hr>
             {% endfor %}
         </div>
     </div>
@@ -182,9 +187,29 @@
     <script type="text/javascript">
 
         function reply(n) {
-        simplemde.value('@' + n );
+            simplemde.value('@' + n);
+        }
+    </script>
+
+    <script>
+    function stars(nn){
+        event.preventDefault();
+        //使a自带的方法失效
+        $.ajax({
+            url: '{% url 'forum:cstars' %}',
+            method: "post",
+            dataType: "json",
+            data: {'cid': nn},
+            success: function (data) {
+                var res = JSON.parse(data);
+                if(res["success"] == true){
+                    window.location.href = "/";
+                } else {
+                    alert(res["msg"]);
+                }
+            }
+        });
     }
 
-</script>
-
+    </script>
 {% endblock %}
