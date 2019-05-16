@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -39,6 +40,17 @@ def topic(request, path):
     t = Topic.objects.filter(path=path).first()
     comments = Comments.objects.filter(topic=t.id).all()
     return render(request, 'topic/topic.html', locals())
+
+
+# 板块
+def board_detail(request, path):
+    bid = Board.objects.get(path=path)
+    contact_list = Topic.objects.filter(board=bid.id).select_related('starter', 'board').order_by('-pk')
+    paginator = Paginator(contact_list, 5)
+
+    page = request.GET.get('page')
+    topic_list = paginator.get_page(page)
+    return render(request, 'topic/board.html', locals())
 
 
 # 发帖

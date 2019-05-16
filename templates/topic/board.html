@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block head %}
+
+
+{% endblock %}
+
+{#样式#}
+{% block css %}
+    <style>
+        .meta {
+            padding-top: 5px;
+            font-size: 5px;
+        }
+
+        .topic_name a {
+            font-size: 16px;
+            color: #778087;
+        }
+    </style>
+{% endblock %}
+
+
+{# 主体 #}
+{% block body %}
+
+    <div class="ui card" style="width: 95%;margin: 0px">
+
+        <div class="content" style="background-color: #fAfAfA;padding: 10px">
+            <div class="ui large breadcrumb">
+                <a class="section" href="/">首页</a>
+                <i class="right chevron icon divider"></i>
+                <div class="active section">{{ bid.name }}</div>
+            </div>
+        </div>
+        {% for topic in topic_list %}
+
+
+            <div class="content" style="padding-left: 0%;position: relative; /">
+                <img class="left floated  ui image" style="height: 48px;margin-bottom: 0px"
+                     src="{{ MEDIA_URL }}{{ topic.starter.avatar }}">
+                <div class="right floated" style="transform: translateY(40%);">
+                    <a class="ui grey circular label ">{{ topic.comment_num }}</a>
+                </div>
+                <div class="topic_name"><a href="{% url 'forum:topic' topic.path %}">{{ topic.title }}</a></div>
+                <div class="sep5"></div>
+                <div class="meta">
+                    <a class="" style="background-color: #f5f5f5;padding: 3px" href="">{{ topic.board }}</a> &nbsp;•&nbsp;
+                    <strong><a href="{% url "users:member_info" topic.starter.username %}"
+                               style="font-weight: bold">{{ topic.starter }}</a></strong> &nbsp;•&nbsp;
+                    {{ topic.last_updated|naturaltime }}
+                </div>
+            </div>
+
+
+
+        {% endfor %}
+
+</div>
+    <br>
+
+    <div class="ui pagination menu">
+
+
+        {% if topic_list.has_previous %}
+            <a class="item" href="?page={{ topic_list.previous_page_number }}">
+                上一页
+            </a>
+        {% endif %}
+
+
+        {% if topic_list.paginator.num_pages < 10 %}
+
+            {% for pg in topic_list.paginator.page_range %}
+                <a class="item  {% if topic_list.number == pg %}active{% endif %}" href="?page={{ pg }}">
+                    {{ pg }}
+                </a>
+            {% endfor %}
+
+        {% else %}
+
+            {% if topic_list.number  > 5 %}
+                <a class="item" href="?page={{ pg }}">
+                    1
+                </a>
+                {% if topic_list.number != 6 %}
+                    <div class="disabled item">
+                        ...
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% for pg in topic_list.paginator.page_range %}
+
+                {% if topic_list.number == pg %}
+                    <a class="item active" href="?page={{ pg }}">
+                        {{ pg }}
+                    </a>
+                {% elif pg < topic_list.number|add:5 and pg > topic_list.number|add:-5 %}
+                    <a class="item" href="?page={{ pg }}">
+                        {{ pg }}
+                    </a>
+                {% endif %}
+
+            {% endfor %}
+
+            {% if  topic_list.number|add:5 <= topic_list.paginator.num_pages %}
+                {% if topic_list.number != topic_list.paginator.num_pages|add:-5 %}
+                    <div class="disabled item">
+                        ...
+                    </div>
+                {% endif %}
+
+                <a class="item" href="?page={{ topic_list.paginator.num_pages }}">
+                    {{ topic_list.paginator.num_pages }}&nbsp;
+                </a>
+            {% endif %}
+        {% endif %}
+        {% if topic_list.has_next %}
+            <a class="item" href="?page={{ topic_list.next_page_number }}">
+                下一页
+            </a>
+        {% endif %}
+
+    </div>
+
+    <div class="ui input" >
+            <form class="ui action right input" action="{% url 'forum:board' bid.path %}" method="get" style="margin-right: 100px">
+            <input type="text" name="page" style = "width:50px;" >
+        </form>
+    </div>
+
+
+
+
+    <script>
+        $(document)
+            .ready(function () {
+                $('.ui.menu a.item')
+                    .on('click', function () {
+                        $(this)
+                            .addClass('active')
+                            {#.addClass('red')#}
+                            .siblings()
+                            .removeClass('active')
+                        ;
+                    })
+                ;
+            })
+        ;
+    </script>
+{% endblock %}
+

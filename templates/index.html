@@ -29,17 +29,24 @@
 
         <div class="ui   segment" style="border: unset;margin: unset;padding: 5px">
             <div class="ui   secondary menu ">
-                <a class="item" href="?tab=all">全部</a>
-                <a class="item" href="?tab=hot">最热</a>
-                <a class="item" href="?tab=python">Python</a>
-                <a class="item" href="?tab=qna">问与答</a>
-                <a class="item" href="?tab=city">城市</a>
-                <a class="item" href="?tab=creative">创意</a>
-                <a class="item" href="?tab=play">好玩</a>
-                <a class="item" href="?tab=sale">交易</a>
-                <a class="item" href="?tab=follow">关注</a>
+                <a class="item {% if bid.path == 'all' %}active{% endif %}" href="?tab=all">全部</a>
+                <a class="item {% if bid.path == 'hot' %}active{% endif %}" href="?tab=hot">最热</a>
+                <a class="item {% if bid.path == 'python' %}active{% endif %}" href="?tab=python">Python</a>
+                <a class="item {% if bid.path == 'qna' %}active{% endif %}" href="?tab=qna">问与答</a>
+                <a class="item {% if bid.path == 'city' %}active{% endif %}" href="?tab=city">城市</a>
+                <a class="item {% if bid.path == 'creative' %}active{% endif %}" href="?tab=creative">创意</a>
+                <a class="item {% if bid.path == 'play' %}active{% endif %}" href="?tab=play">好玩</a>
+                <a class="item {% if bid.path == 'sale' %}active{% endif %}" href="?tab=sale">交易</a>
+                <a class="item {% if bid.path == 'follow' %}active{% endif %}" href="?tab=follow">关注</a>
             </div>
         </div>
+        <div class="ui borderless menu" style="margin: unset;border: unset;background-color: #F9F9F9;">
+            {% if bid %}
+            <a class="item" href="{% url 'forum:board' bid.path %}">{{ bid.name }}</a>
+            {% endif %}
+
+        </div>
+
         {% for topic in topic_list %}
 
 
