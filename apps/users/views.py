@@ -1,10 +1,10 @@
+from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.conf import settings
 from .forms import *
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
 from .backends import OwskaEmail
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import auth
 import redis
@@ -15,6 +15,7 @@ from django.views.generic.base import View
 from PIL import Image, ImageDraw, ImageFont
 from django.contrib.auth.hashers import make_password, check_password
 from .models import *
+from forum.models import Topic
 
 
 class MyRedis(object):
@@ -203,7 +204,10 @@ def logout(request):
 # 用户信息
 @login_required
 def member_info(request, username):
-    return render(request, 'users/member.html')
+    user_info = User.objects.filter(username=username).first()
+    topic_list = Topic.objects.filter(starter=user_info.id).order_by('-pk')
+    topic_sum = topic_list.count()
+    return render(request, 'users/member.html', locals())
 
 
 # 修改头像

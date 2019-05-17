@@ -52,14 +52,15 @@
         </div>
         <div class="extra content">
             <div class="extra content">
-            <span class="left floated like">
-              <i class="like icon"></i>
-              Like
-            </span>
+                <span class="left floated like">
+                  <i class="like icon"></i>
+                  感谢
+                </span>
+
                 <span class="right floated star">
-              <i class="star icon"></i>
-              Favorite
-            </span>
+                  <i class="star icon"></i>
+                  收藏
+                </span>
             </div>
         </div>
     </div>
@@ -88,7 +89,7 @@
             {#  评论  #}
             {% for c in comments %}
 
-                <div class="comment">
+                <div class="comment" style="border-bottom:1px solid dimgrey;">
                     <a class="avatar">
                         <img src="{{ MEDIA_URL }}{{ c.author.avatar }}">
                     </a>
@@ -107,13 +108,15 @@
                                 <a class="reply" href="#" onclick="reply('{{ c.author.name }}')">回复</a>
                             </div>
                         </div>
+                        <div class="sep5"></div>
                         <div class="text">
                             {{ c.get_reply_as_markdown|safe }}
                         </div>
                     </div>
                 </div>
-                <hr>
+                {#                <hr>#}
             {% endfor %}
+
         </div>
     </div>
     <div class="sep20"></div>
@@ -187,29 +190,29 @@
     <script type="text/javascript">
 
         function reply(n) {
-            simplemde.value('@' + n);
+            simplemde.value('@' + n + '  ');
         }
     </script>
 
     <script>
-    function stars(nn){
-        event.preventDefault();
-        //使a自带的方法失效
-        $.ajax({
-            url: '{% url 'forum:cstars' %}',
-            method: "post",
-            dataType: "json",
-            data: {'cid': nn},
-            success: function (data) {
-                var res = JSON.parse(data);
-                if(res["success"] == true){
-                    window.location.href = "/";
-                } else {
-                    alert(res["msg"]);
+        function stars(nn) {
+            event.preventDefault();
+            //使a自带的方法失效
+            $.ajax({
+                url: '{% url 'forum:cstars' %}',
+                method: "post",
+                dataType: "json",
+                data: {'cid': nn},
+                success: function (data) {
+                    if (data["success"] == true) {
+                        alert('赞同成功')
+                        window.location.reload();
+                    } else {
+                        alert(data["msg"]);
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
 
     </script>
 {% endblock %}

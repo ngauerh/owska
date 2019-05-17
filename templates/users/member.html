@@ -2,48 +2,77 @@
 
 {% block head %}
     <style>
-    input,img{vertical-align:middle;}
+        input, img {
+            vertical-align: middle;
+        }
 
     </style>
 {% endblock %}
 
 
 {% block body %}
-
-
-<div class="ui relaxed grid " style="margin-left: 0em;">
-
-    <div class="five wide column" style="padding: 0%;">
-      <div class="ui card" style="width: 95%">
-        <div class="content" style="padding-left: 0%">
-        <img class="left floated mini ui image" src="{{ MEDIA_URL }}avatar/../../media/avatars/default/1.png">
-        <div class="header">Cute</div>
-        <div class="meta">2 days ago</div>
-      </div>
-      </div>
-        <div class="ui middle aligned selection list">
-      <div class="item">
-
-        <div class="content">
-          <div class="header">Helen</div>
+    <div class="ui relaxed grid ">
+        <div class="seven wide column">
+            <img class="fluid  ui image" src="{{ MEDIA_URL }}{{ user_info.avatar }}">
+            <div class="ui fluid large vertical menu">
+                <a class="active item">
+                    帖子
+                </a>
+                <a class="item">
+                    回复
+                </a>
+                <a class="item">
+                    收藏
+                </a>
+                <a class="item">
+                    信息
+                </a>
+            </div>
         </div>
-      </div>
-      <div class="item">
-        <div class="content">
-          <div class="header"><a href="">详细信息</a></div>
+        <div class="nine wide column">
+            <div class="ui card fluid">
+                <div class="content">
+                    <a class="header">{{ user_info.name }}</a>
+                    <div class="sep5"></div>
+                    <div class="meta">
+                        <a class="ui green circular label">Online</a>
+                        <a class="ui grey circular label">Offline</a>
+                        <span class="date">Joined {{ user_info.date_joined }}</span>
+                        <span class="email">{{ user_info.email }}</span>
+                    </div>
+                </div>
+            </div>
+        <h4>您已发布{{ topic_sum }}条帖子</h4>
+        <div class="ui card fluid">
+        {% for topic in topic_list %}
+
+
+            <div class="content" style="padding-left: 0%;position: relative; /">
+                <img class="left floated  ui image" style="height: 48px;margin-bottom: 0px"
+                     src="{{ MEDIA_URL }}{{ topic.starter.avatar }}">
+                <div class="right floated" style="transform: translateY(40%);">
+                    <a class="ui grey circular label ">{{ topic.comment_num }}</a>
+                </div>
+                <div class="topic_name"><a href="{% url 'forum:topic' topic.path %}">{{ topic.title }}</a></div>
+                <div class="sep5"></div>
+                <div class="meta">
+                    <a class="" style="background-color: #f5f5f5;padding: 3px" href="{% url 'forum:board' topic.board.path %}">{{ topic.board }}</a> &nbsp;•&nbsp;
+                    <strong><a href="{% url "users:member_info" topic.starter.username %}"
+                               style="font-weight: bold">{{ topic.starter }}</a></strong> &nbsp;•&nbsp;
+                    {{ topic.last_updated }}
+
+                </div>
+            </div>
+
+
+
+        {% endfor %}
         </div>
-      </div>
-      <div class="item">
-        <div class="content">
-          <div class="header">Daniel</div>
         </div>
-      </div>
     </div>
-    </div>
+{% endblock %}
 
-
-
-</div>
+{% block side %}
 
 {% endblock %}
 

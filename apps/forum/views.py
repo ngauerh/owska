@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.contrib.auth.decorators import login_required
@@ -92,8 +92,8 @@ class TopicComments(View):
             c = Topic.objects.filter(id=request.POST['topic']).first()
             c.comment_num += 1
             c.save()
-            res = {"success": True, "msg": "成功"}
-            return HttpResponse(json.dumps(res), content_type="application/json")
+            res = {"success": True, "msg": "回复失败"}
+            return JsonResponse(res)
         else:
             print(f.errors)
 
@@ -104,8 +104,8 @@ class CommentStars(View):
         s = Comments.objects.filter(id=request.POST['cid']).first()
         s.stars += 1
         s.save()
-        res = {"success": True, "msg": "成功"}
-        return HttpResponse(json.dumps(res), content_type="application/json")
+        res = {"success": True, "msg": "赞同回复失败"}
+        return JsonResponse(res)
 
 
 
