@@ -56,11 +56,23 @@
                   <i class="like icon"></i>
                   感谢
                 </span>
+                {% if collect %}
+                    <a onclick="uncollect('{{ t.id }}')">
+                    <span class="right floated star">
+                      <i class="star yellow icon"></i>
+                      取消收藏
+                    </span>
+                    </a>
+                {% else %}
+                    <a onclick="collect('{{ t.id }}')">
+                    <span class="right floated star">
+                      <i class="star  icon"></i>
+                      收藏
+                    </span>
+                    </a>
+                {% endif %}
 
-                <span class="right floated star">
-                  <i class="star icon"></i>
-                  收藏
-                </span>
+
             </div>
         </div>
     </div>
@@ -104,7 +116,7 @@
                                 {% endif %}
                             </div>
                             <div class="actions">
-                                <a class="stars" href="#" onclick="stars('{{ c.id }}')">感谢</a>
+                                <a class="stars" onclick="stars('{{ c.id }}')">感谢</a>
                                 <a class="reply" href="#" onclick="reply('{{ c.author.name }}')">回复</a>
                             </div>
                         </div>
@@ -214,5 +226,44 @@
             });
         }
 
+        function collect(cc) {
+            event.preventDefault();
+            //使a自带的方法失效
+            $.ajax({
+                url: '{% url 'forum:topic_collect' %}',
+                method: "post",
+                dataType: "json",
+                data: {'collect': cc},
+                success: function (data) {
+                    if (data["success"] == true) {
+                        alert(data["msg"])
+                        window.location.reload();
+                    } else {
+                        alert(data["msg"]);
+                    }
+                }
+            });
+        }
+
+        {#取消收藏#}
+
+        function uncollect(cc) {
+            event.preventDefault();
+            //使a自带的方法失效
+            $.ajax({
+                url: '{% url 'forum:topic_uncollect' %}',
+                method: "post",
+                dataType: "json",
+                data: {'collect': cc},
+                success: function (data) {
+                    if (data["success"] == true) {
+                        alert(data["msg"])
+                        window.location.reload();
+                    } else {
+                        alert(data["msg"]);
+                    }
+                }
+            });
+        }
     </script>
 {% endblock %}

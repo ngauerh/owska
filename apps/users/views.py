@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -15,7 +16,7 @@ from django.views.generic.base import View
 from PIL import Image, ImageDraw, ImageFont
 from django.contrib.auth.hashers import make_password, check_password
 from .models import *
-from forum.models import Topic
+from forum.models import Topic, Comments, Collected
 
 
 class MyRedis(object):
@@ -205,9 +206,44 @@ def logout(request):
 @login_required
 def member_info(request, username):
     user_info = User.objects.filter(username=username).first()
-    topic_list = Topic.objects.filter(starter=user_info.id).order_by('-pk')
-    topic_sum = topic_list.count()
+    topic_all = Topic.objects.filter(starter=user_info.id).order_by('-pk')
+
+    paginator = Paginator(topic_all, 5)
+    page = request.GET.get('page')
+    topic_list = paginator.get_page(page)
+
+    topic_sum = topic_all.count()
     return render(request, 'users/member.html', locals())
+
+
+def member_comments(request, username):
+    user_info = User.objects.filter(username=username).first()
+    comments_all = Comments.objects.filter(author=user_info.id).order_by('-pk')
+
+    paginator = Paginator(comments_all, 5)
+    page = request.GET.get('page')
+    comments_list = paginator.get_page(page)
+
+    comments_sum = comments_all.count()
+    return render(request, 'users/comments.html', locals())
+
+
+def member_collected(request, username):
+    user_info = User.objects.filter(username=username).first()
+    collect_all = Collected.objects.filter(starter_id=user_info.id).order_by('-pk')
+
+    paginator = Paginator(collect_all, 5)
+    page = request.GET.get('page')
+    collect_list = paginator.get_page(page)
+
+    collect_sum = collect_all.count()
+
+    return render(request, 'users/collected.html', locals())
+
+
+def member_details(request, username):
+    user_info = User.objects.filter(username=username).first()
+    return render(request, 'users/details.html', locals())
 
 
 # 修改头像

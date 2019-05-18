@@ -39,6 +39,7 @@ class GetBoard(viewsets.ModelViewSet):
 def topic(request, path):
     t = Topic.objects.filter(path=path).first()
     comments = Comments.objects.filter(topic=t.id).all()
+    collect = Collected.objects.filter(topic_id=t.id, starter_id=request.user.id).first()
     return render(request, 'topic/topic.html', locals())
 
 
@@ -107,5 +108,32 @@ class CommentStars(View):
         res = {"success": True, "msg": "赞同回复失败"}
         return JsonResponse(res)
 
+
+class CollectTopic(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        try:
+            s = Collected()
+            s.starter_id = request.user.id
+            s.topic_id = request.POST['collect']
+            s.save()
+            res = {"success": True, "msg": "收藏成功"}
+            return JsonResponse(res)
+        except:
+            res = {"success": False, "msg": "不好意思，发生未知错误"}
+            return JsonResponse(res)
+
+
+# 取消收藏
+class UnCollectTopic(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        try:
+            Collected.objects.filter(topic_id=request.POST['collect'], starter_id=request.user.id).first().delete()
+            res = {"success": True, "msg": "取消收藏成功"}
+            return JsonResponse(res)
+        except:
+            res = {"success": False, "msg": "不好意思，发生未知错误"}
+            return JsonResponse(res)
 
 

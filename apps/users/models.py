@@ -23,6 +23,16 @@ def default_avatars():
 class User(AbstractUser):
     name = models.CharField(max_length=50, blank=True)
     avatar = models.ImageField(null=True, upload_to=user_directory_path, default=default_avatars)  # 头像
+    website = models.URLField('个人网站', max_length=100, null=True)
+    company = models.CharField('所在公司', max_length=50, null=True)
+    location = models.CharField('所在地', max_length=50, null=True)
+    weibo = models.CharField('微博', max_length=50, null=True)
+    twitter = models.CharField('twitter', max_length=50, null=True)
+    github = models.CharField('github', max_length=50, null=True)
+    instagram = models.CharField('instagram', max_length=50, null=True)
+    telegram = models.CharField('telegram', max_length=50, null=True)
+    linkedin = models.CharField('linkedin', max_length=50, null=True)
+    biography = models.TextField('个人简介', null=True)
 
     class Meta(AbstractUser.Meta):
         pass

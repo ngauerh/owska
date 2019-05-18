@@ -1,10 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'users/base.html' %}
 
-</body>
-</html>
+{% block head %}
+    <style>
+        input, img {
+            vertical-align: middle;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="ui card fluid">
+        <form class="ui form">
+            <h4 class="ui dividing header">个人信息</h4>
+            <div class="field">
+                <label>用户名</label>
+                <input type="text" name="last-name" placeholder="名">
+            </div>
+            <div class="field">
+                <label>所在公司</label>
+                <input type="text" name="last-name" placeholder="名">
+            </div>
+            <div class="field">
+                <label>所在地</label>
+                <input type="text" name="last-name" placeholder="名">
+            </div>
+            <div class="inline fields">
+                <label>个人网站</label>
+                <input type="text" name="website" placeholder="名">
+            </div>
+            <div class="inline fields">
+                <label>微博</label>
+                <input type="text" name="weibo" placeholder="名">
+            </div>
+            <div class="inline fields">
+                <label>Twitter</label>
+                <input type="text" name="twitter" placeholder="名">
+            </div>
+            <div class="inline fields">
+                <label>Github</label>
+                <input type="text" name="twitter" placeholder="名">
+            </div>
+            <div class="inline fields">
+                <label>Instagram</label>
+                <input type="text" name="instagram" placeholder="名">
+            </div>
+            <div class="inline fields">
+                <label>Telegram</label>
+                <input type="text" name="telegram" placeholder="名">
+            </div>
+            <div class="inline fields">
+                <label>LinkedIn</label>
+                <input type="text" name="linkedin" placeholder="名">
+            </div>
+            <button class="ui button" type="submit">保存设置</button>
+        </form>
+    </div>
+{% endblock %}
+
+
+

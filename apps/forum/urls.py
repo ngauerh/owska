@@ -14,6 +14,8 @@ urlpatterns = [
     path('b/<str:path>/', board_detail, name='board'),  # 板块
     path('api', include(router.urls)),  # 全部主题
     path('comment', TopicComments.as_view(), name='comments'),
-    path('comment_stars', CommentStars.as_view(), name='cstars')
+    path('comment_stars', CommentStars.as_view(), name='cstars'),  # 赞同评论
+    path('topic_collect', CollectTopic.as_view(), name='topic_collect'),  # 收藏
+    path('topic_uncollect', UnCollectTopic.as_view(), name='topic_uncollect'),  # 取消收藏
 
 ]

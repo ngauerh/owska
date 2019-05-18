@@ -1,0 +1,101 @@
+{% extends 'users/base.html' %}
+
+{% block head %}
+    <style>
+        input, img {
+            vertical-align: middle;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block body %}
+
+    <h4>您已发布了{{ comments_sum }}条回帖</h4>
+    <div class="ui card fluid">
+        {% for comments in comments_list %}
+            <div class="ui card fluid" style="margin: unset">
+                <div class="content">
+                    <div class="meta">
+                        回复了<a href="{% url "users:member_info" comments.topic.starter.username %}">{{ comments.topic.starter }}</a>创建的主题 › <a href="{% url 'forum:board' comments.topic.board.path %}">{{ comments.topic.board }}</a> › <a href="{% url 'forum:topic' comments.topic.path %}">{{ comments.topic.title }}</a>
+                    </div>
+                    <div class="description">
+                        {{ comments.content }}
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+    <br>
+
+    <div class="ui pagination menu">
+
+
+        {% if comments_list.has_previous %}
+            <a class="item" href="?page={{ comments_list.previous_page_number }}">
+                上一页
+            </a>
+        {% endif %}
+
+
+        {% if comments_list.paginator.num_pages < 10 %}
+
+            {% for pg in comments_list.paginator.page_range %}
+                <a class="item  {% if comments_list.number == pg %}active{% endif %}" href="?page={{ pg }}">
+                    {{ pg }}
+                </a>
+            {% endfor %}
+
+        {% else %}
+
+            {% if comments_list.number  > 5 %}
+                <a class="item" href="?page={{ pg }}">
+                    1
+                </a>
+                {% if comments_list.number != 6 %}
+                    <div class="disabled item">
+                        ...
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% for pg in comments_list.paginator.page_range %}
+
+                {% if comments_list.number == pg %}
+                    <a class="item active" href="?page={{ pg }}">
+                        {{ pg }}
+                    </a>
+                {% elif pg < comments_list.number|add:5 and pg > comments_list.number|add:-5 %}
+                    <a class="item" href="?page={{ pg }}">
+                        {{ pg }}
+                    </a>
+                {% endif %}
+
+            {% endfor %}
+
+            {% if  comments_list.number|add:5 <= comments_list.paginator.num_pages %}
+                {% if comments_list.number != comments_list.paginator.num_pages|add:-5 %}
+                    <div class="disabled item">
+                        ...
+                    </div>
+                {% endif %}
+
+                <a class="item" href="?page={{ comments_list.paginator.num_pages }}">
+                    {{ comments_list.paginator.num_pages }}&nbsp;
+                </a>
+            {% endif %}
+        {% endif %}
+        {% if comments_list.has_next %}
+            <a class="item" href="?page={{ comments_list.next_page_number }}">
+                下一页
+            </a>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+
+

@@ -94,3 +94,8 @@ class Comments(models.Model):
         return mark_safe(markdown(self.content, safe_mode='escape'))
 
 
+# 用户收藏
+class Collected(models.Model):
+    id = models.AutoField(primary_key=True)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    starter = models.ForeignKey(User, on_delete=models.CASCADE)
