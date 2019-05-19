@@ -15,46 +15,46 @@
     <div class="ui card fluid">
         <form class="ui form">
             <h4 class="ui dividing header">个人信息</h4>
-            <div class="field">
-                <label>用户名</label>
-                <input type="text" name="last-name" placeholder="名">
-            </div>
-            <div class="field">
-                <label>所在公司</label>
-                <input type="text" name="last-name" placeholder="名">
-            </div>
-            <div class="field">
-                <label>所在地</label>
-                <input type="text" name="last-name" placeholder="名">
-            </div>
-            <div class="inline fields">
-                <label>个人网站</label>
-                <input type="text" name="website" placeholder="名">
-            </div>
-            <div class="inline fields">
-                <label>微博</label>
-                <input type="text" name="weibo" placeholder="名">
-            </div>
-            <div class="inline fields">
-                <label>Twitter</label>
-                <input type="text" name="twitter" placeholder="名">
-            </div>
-            <div class="inline fields">
-                <label>Github</label>
-                <input type="text" name="twitter" placeholder="名">
-            </div>
-            <div class="inline fields">
-                <label>Instagram</label>
-                <input type="text" name="instagram" placeholder="名">
-            </div>
-            <div class="inline fields">
-                <label>Telegram</label>
-                <input type="text" name="telegram" placeholder="名">
-            </div>
-            <div class="inline fields">
-                <label>LinkedIn</label>
-                <input type="text" name="linkedin" placeholder="名">
-            </div>
+            <table class="ui very basic small table">
+                <tbody>
+                <tr>
+                    <td class="right aligned">个人网站</td>
+                    <td><input type="text" name="website" placeholder="{{ user.website }}"></td>
+                </tr>
+                <tr>
+                    <td class="right aligned">所在公司</td>
+                    <td><input type="text" name="last-name" placeholder="{{ user.company }}"></td>
+                </tr>
+                <tr>
+                    <td class="right aligned">所在地</td>
+                    <td><input type="text" name="last-name" placeholder="{{ user.location }}"></td>
+                </tr>
+                <tr>
+                    <td class="right aligned">微博</td>
+                    <td><input type="text" name="weibo" placeholder="{{ user.weibo }}"></td>
+                </tr>
+                <tr>
+                    <td class="right aligned">Twitter</td>
+                    <td><input type="text" name="twitter" placeholder="{{ user.twitter }}"></td>
+                </tr>
+                <tr>
+                    <td class="right aligned">Github</td>
+                    <td><input type="text" name="twitter" placeholder="{{ user.github }}"></td>
+                </tr>
+                <tr>
+                    <td class="right aligned">Instagram</td>
+                    <td><input type="text" name="instagram" placeholder="{{ user.instagram }}"></td>
+                </tr>
+                <tr>
+                    <td class="right aligned">Telegram</td>
+                    <td><input type="text" name="telegram" placeholder="{{ user.telegram }}"></td>
+                </tr>
+                <tr>
+                    <td class="right aligned">LinkedIn</td>
+                    <td><input type="text" name="linkedin" placeholder="{{ user.linkedin }}"></td>
+                </tr>
+                </tbody>
+            </table>
             <button class="ui button" type="submit">保存设置</button>
         </form>
     </div>
