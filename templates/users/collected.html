@@ -1,0 +1,105 @@
+{% extends 'users/base.html' %}
+
+{% block head %}
+    <style>
+        input, img {
+            vertical-align: middle;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block body %}
+
+    <h4>您已收藏了{{ topic_sum }}条帖子</h4>
+    <div class="ui card fluid">
+        {% for collect in collect_list %}
+            <div class="ui card fluid" style="margin: unset">
+                <div class="content">
+                    <img class="left floated mini ui image" src="{{ MEDIA_URL }}{{ collect.starter.avatar }}">
+                    <div class="header">
+                        <a href="{% url 'forum:topic' collect.topic.path %}">{{ collect.topic.title }}</a>
+                    </div>
+                    <div class="meta">
+                        {{ collect.topic.last_updated }}
+                    </div>
+                    <div class="description">
+                        {{ collect.topic.content }}
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+    <br>
+
+    <div class="ui pagination menu">
+
+
+        {% if collect_list.has_previous %}
+            <a class="item" href="?page={{ collect_list.previous_page_number }}">
+                上一页
+            </a>
+        {% endif %}
+
+
+        {% if collect_list.paginator.num_pages < 10 %}
+
+            {% for pg in collect_list.paginator.page_range %}
+                <a class="item  {% if collect_list.number == pg %}active{% endif %}" href="?page={{ pg }}">
+                    {{ pg }}
+                </a>
+            {% endfor %}
+
+        {% else %}
+
+            {% if collect_list.number  > 5 %}
+                <a class="item" href="?page={{ pg }}">
+                    1
+                </a>
+                {% if collect_list.number != 6 %}
+                    <div class="disabled item">
+                        ...
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% for pg in collect_list.paginator.page_range %}
+
+                {% if collect_list.number == pg %}
+                    <a class="item active" href="?page={{ pg }}">
+                        {{ pg }}
+                    </a>
+                {% elif pg < collect_list.number|add:5 and pg > collect_list.number|add:-5 %}
+                    <a class="item" href="?page={{ pg }}">
+                        {{ pg }}
+                    </a>
+                {% endif %}
+
+            {% endfor %}
+
+            {% if  collect_list.number|add:5 <= collect_list.paginator.num_pages %}
+                {% if collect_list.number != collect_list.paginator.num_pages|add:-5 %}
+                    <div class="disabled item">
+                        ...
+                    </div>
+                {% endif %}
+
+                <a class="item" href="?page={{ collect_list.paginator.num_pages }}">
+                    {{ collect_list.paginator.num_pages }}&nbsp;
+                </a>
+            {% endif %}
+        {% endif %}
+        {% if collect_list.has_next %}
+            <a class="item" href="?page={{ collect_list.next_page_number }}">
+                下一页
+            </a>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+
+
