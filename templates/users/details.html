@@ -13,49 +13,91 @@
 {% block body %}
 
     <div class="ui card fluid">
-        <form class="ui form">
-            <h4 class="ui dividing header">个人信息</h4>
-            <table class="ui very basic small table">
+        <form class="ui form" method="post" action="{% url 'users:member_details' user_info.username %}">
+        {% csrf_token %}
+            <table class="ui very basic small table" style="padding-right: 5%">
                 <tbody>
                 <tr>
-                    <td class="right aligned">个人网站</td>
-                    <td><input type="text" name="website" placeholder="{{ user.website }}"></td>
+                    <td class="right aligned three wide">个人网站</td>
+                    <td><input type="text" name="website"
+                               {% if user.website %}
+                               placeholder="{{ user.website }}"
+                               {% endif %}>
+                    </td>
                 </tr>
                 <tr>
                     <td class="right aligned">所在公司</td>
-                    <td><input type="text" name="last-name" placeholder="{{ user.company }}"></td>
+                    <td><input type="text" name="company"
+                               {% if user.company %}
+                               placeholder="{{ user.company }}"
+                               {% endif %}>
+                    </td>
                 </tr>
                 <tr>
                     <td class="right aligned">所在地</td>
-                    <td><input type="text" name="last-name" placeholder="{{ user.location }}"></td>
+                    <td><input type="text" name="location"
+                               {% if user.location %}
+                               placeholder="{{ user.location }}"
+                               {% endif %}>
+                    </td>
                 </tr>
                 <tr>
                     <td class="right aligned">微博</td>
-                    <td><input type="text" name="weibo" placeholder="{{ user.weibo }}"></td>
+                    <td><input type="text" name="weibo"
+                               {% if user.weibo %}
+                               placeholder="{{ user.weibo }}"
+                               {% endif %}>
+                    </td>
                 </tr>
                 <tr>
                     <td class="right aligned">Twitter</td>
-                    <td><input type="text" name="twitter" placeholder="{{ user.twitter }}"></td>
+                    <td><input type="text" name="twitter"
+                               {% if user.twitter %}
+                               placeholder="{{ user.twitter }}"
+                               {% endif %}>
+                    </td>
                 </tr>
                 <tr>
                     <td class="right aligned">Github</td>
-                    <td><input type="text" name="twitter" placeholder="{{ user.github }}"></td>
+                    <td><input type="text" name="github"
+                               {% if user.github %}
+                               placeholder="{{ user.github }}"
+                               {% endif %}>
+                    </td>
                 </tr>
                 <tr>
                     <td class="right aligned">Instagram</td>
-                    <td><input type="text" name="instagram" placeholder="{{ user.instagram }}"></td>
+                    <td><input type="text" name="instagram"
+                               {% if user.instagram %}
+                               placeholder="{{ user.instagram }}"
+                               {% endif %}>
+                    </td>
                 </tr>
                 <tr>
                     <td class="right aligned">Telegram</td>
-                    <td><input type="text" name="telegram" placeholder="{{ user.telegram }}"></td>
+                    <td>
+                        <input type="text" name="telegram"
+                               {% if  user.telegram %}
+                               placeholder="{{ user.telegram }}"
+                               {% endif %}>
+                    </td>
                 </tr>
                 <tr>
                     <td class="right aligned">LinkedIn</td>
-                    <td><input type="text" name="linkedin" placeholder="{{ user.linkedin }}"></td>
+                    <td>
+                        <input type="text" name="linkedin"
+                               {% if user.linkedin %}placeholder="{{ user.linkedin }}"{% endif %}>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="right aligned">个然简介</td>
+                    <td><textarea type="text" name="biography"
+                            {% if user.biography %}placeholder="{{ user.biography }}"{% endif %}></textarea>
+                    </td>
                 </tr>
                 </tbody>
             </table>
-            <button class="ui button" type="submit">保存设置</button>
+            <button class="ui red button" type="submit">保存设置</button>
         </form>
     </div>
 {% endblock %}

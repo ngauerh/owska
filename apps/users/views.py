@@ -11,12 +11,13 @@ from django.contrib import auth
 import redis
 from django.contrib.auth.decorators import login_required
 import io
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic.base import View
 from PIL import Image, ImageDraw, ImageFont
 from django.contrib.auth.hashers import make_password, check_password
 from .models import *
 from forum.models import Topic, Comments, Collected
+from django.utils.decorators import method_decorator
 
 
 class MyRedis(object):
@@ -244,6 +245,26 @@ def member_collected(request, username):
 def member_details(request, username):
     user_info = User.objects.filter(username=username).first()
     return render(request, 'users/details.html', locals())
+
+
+class MemberDetails(View):
+    @method_decorator(login_required)
+    def get(self, request, username):
+        user_info = User.objects.filter(username=username).first()
+        return render(request, 'users/details.html', locals())
+
+    @method_decorator(login_required)
+    def post(self, request, username):
+        f = DetailsForm(request.POST, instance=User.objects.get(id=request.user.id))
+        if f.is_valid():
+            f.save(commit=False)
+            f.id = request.user.id
+            f.save()
+            res = {"success": True, "msg": "信息保存成功"}
+        else:
+            print(f.errors)
+            res = {"success": False, "msg": "信息保存失败"}
+        return JsonResponse(res)
 
 
 # 修改头像
