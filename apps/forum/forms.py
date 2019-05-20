@@ -10,7 +10,9 @@ class TopicForm(forms.ModelForm):
 
 class BoardList(forms.Form):
     board = forms.IntegerField(
-        widget=forms.Select()
+        widget=forms.Select(
+            attrs={'name': 'skills', 'class': 'ui fluid search dropdown'}
+        )
     )
 
     def __init__(self, *args, **kwargs):
