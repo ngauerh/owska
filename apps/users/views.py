@@ -242,15 +242,12 @@ def member_collected(request, username):
     return render(request, 'users/collected.html', locals())
 
 
-def member_details(request, username):
-    user_info = User.objects.filter(username=username).first()
-    return render(request, 'users/details.html', locals())
-
-
 class MemberDetails(View):
     @method_decorator(login_required)
     def get(self, request, username):
         user_info = User.objects.filter(username=username).first()
+        user_if = user_info.website or user_info.company or user_info.location or user_info.weibo or \
+                  user_info.instagram or user_info.telegram or user_info.twitter or user_info.github or user_info.linkedin
         return render(request, 'users/details.html', locals())
 
     @method_decorator(login_required)

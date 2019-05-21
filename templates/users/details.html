@@ -1,5 +1,5 @@
 {% extends 'users/base.html' %}
-
+{% load static from staticfiles %}
 {% block head %}
     <style>
         input, img {
@@ -11,95 +11,207 @@
 
 
 {% block body %}
-
     <div class="ui card fluid">
-        <form class="ui form" method="post" action="{% url 'users:member_details' user_info.username %}">
-        {% csrf_token %}
-            <table class="ui very basic small table" style="padding-right: 5%">
-                <tbody>
-                <tr>
-                    <td class="right aligned three wide">个人网站</td>
-                    <td><input type="text" name="website"
-                               {% if user.website %}
-                               placeholder="{{ user.website }}"
-                               {% endif %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="right aligned">所在公司</td>
-                    <td><input type="text" name="company"
-                               {% if user.company %}
-                               placeholder="{{ user.company }}"
-                               {% endif %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="right aligned">所在地</td>
-                    <td><input type="text" name="location"
-                               {% if user.location %}
-                               placeholder="{{ user.location }}"
-                               {% endif %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="right aligned">微博</td>
-                    <td><input type="text" name="weibo"
-                               {% if user.weibo %}
-                               placeholder="{{ user.weibo }}"
-                               {% endif %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="right aligned">Twitter</td>
-                    <td><input type="text" name="twitter"
-                               {% if user.twitter %}
-                               placeholder="{{ user.twitter }}"
-                               {% endif %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="right aligned">Github</td>
-                    <td><input type="text" name="github"
-                               {% if user.github %}
-                               placeholder="{{ user.github }}"
-                               {% endif %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="right aligned">Instagram</td>
-                    <td><input type="text" name="instagram"
-                               {% if user.instagram %}
-                               placeholder="{{ user.instagram }}"
-                               {% endif %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="right aligned">Telegram</td>
-                    <td>
-                        <input type="text" name="telegram"
-                               {% if  user.telegram %}
-                               placeholder="{{ user.telegram }}"
-                               {% endif %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="right aligned">LinkedIn</td>
-                    <td>
-                        <input type="text" name="linkedin"
-                               {% if user.linkedin %}placeholder="{{ user.linkedin }}"{% endif %}>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="right aligned">个然简介</td>
-                    <td><textarea type="text" name="biography"
-                            {% if user.biography %}placeholder="{{ user.biography }}"{% endif %}></textarea>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <button class="ui red button" type="submit">保存设置</button>
-        </form>
+        {% if user_if %}
+        <div class="content">
+            <div class="meta">{% if user_info.biography %}{{ user_info.biography }}{% endif %}</div>
+            <div class="sep5"></div>
+            <div class="sep5"></div>
+            <div class="description">
+                <div class="ui doubling five column grid">
+                    {% if user_info.website %}
+                        <div class="column">
+                            <a class="ui circular label" href="{{ user_info.website }}" title="{{ user_info.website }}"
+                               target="_blank">
+                                <img class="ui right spaced avatar image" src="{% static 'website_icon/link.png' %}">
+                                个人网站&nbsp;
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    {% if user_info.company %}
+                        <div class="column">
+                            <a class="ui circular label" title="所在公司">
+                                <img class="ui right spaced avatar image" src="{% static 'website_icon/company.png' %}">
+                                {{ user_info.company }}
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if user_info.location %}
+                        <div class="column">
+                            <a class="ui circular label" title="所在地">
+                                <img class="ui right spaced avatar image"
+                                     src="{% static 'website_icon/location.png' %}">
+                                {{ user_info.location }}&nbsp;
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if user_info.weibo %}
+                        <div class="column">
+                            <a class="ui circular label" href="{{ user_info.weibo }}" title="{{ user_info.github }}"
+                               target="_blank">
+                                <img class="ui right spaced avatar image" src="{% static 'website_icon/weibo.png' %}">
+                                微博
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if user_info.instagram %}
+                        <div class="column">
+                            <a class="ui circular label" href="https://instagram.com/{{ user_info.instagram }}"
+                               title="instagram" target="_blank">
+                                <img class="ui right spaced avatar image" src="{% static 'website_icon/ins.png' %}">
+                                {{ user_info.instagram }}&nbsp;
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if user_info.telegram %}
+                        <div class="column">
+                            <a class="ui circular label" href="https://telegram.me/{{ user_info.telegram }}"
+                               title="telegram" target="_blank">
+                                <img class="ui right spaced avatar image"
+                                     src="{% static 'website_icon/telegram.png' %}">
+                                {{ user_info.telegram }}&nbsp;
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if user_info.twitter %}
+                        <div class="column">
+                            <a class="ui circular label" href="https://twitter.com/{{ user_info.twitter }}"
+                               title="twitter" target="_blank">
+                                <img class="ui right spaced avatar image" src="{% static 'website_icon/twitter.png' %}">
+                                {{ user_info.twitter }}&nbsp;
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if user_info.github %}
+                        <div class="column">
+                            <a class="ui circular label" href="https://github.com/{{ user_info.github }}" title="github"
+                               target="_blank">
+                                <img class="ui right spaced avatar image" src="{% static 'website_icon/github.png' %}">
+                                {{ user_info.github }}&nbsp;
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if user_info.linkedin %}
+                        <div class="column">
+                            <a class="ui circular label" href="{{ user_info.linkedin }}" title="linkedin"
+                               target="_blank">
+                                <img class="ui right spaced avatar image"
+                                     src="{% static 'website_icon/linkedin.png' %}">
+                                LinkedIn&nbsp;
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+            <div class="content">
+                <div class="description" style="text-align: center">
+                    该用户还没有公开任何信息
+                </div>
+            </div>
+        {% endif %}
     </div>
+
+    {% if user_info.id == user.id %}
+        <div class="ui card fluid">
+            <form class="ui form" method="post" action="{% url 'users:member_details' user_info.username %}">
+                {% csrf_token %}
+                <table class="ui very basic small table" style="padding-right: 5%">
+                    <tbody>
+                    <tr>
+                        <td class="right aligned three wide">个人网站</td>
+                        <td><input type="text" name="website"
+                                {% if user.website %}
+                                   value="{{ user.website }}"
+                                {% endif %} placeholder="以http或https开头的有效http地址">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">所在公司</td>
+                        <td><input type="text" name="company"
+                                {% if user.company %}
+                                   value="{{ user.company }}"
+                                {% endif %}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">所在地</td>
+                        <td><input type="text" name="location"
+                                {% if user.location %}
+                                   value="{{ user.location }}"
+                                {% endif %}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">微博</td>
+                        <td><input type="text" name="weibo"
+                                {% if user.weibo %}
+                                   value="{{ user.weibo }}"
+                                {% endif %}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">Twitter</td>
+                        <td><input type="text" name="twitter"
+                                {% if user.twitter %}
+                                   value="{{ user.twitter }}"
+                                {% endif %} placeholder="请输入微博主页链接">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">Github</td>
+                        <td><input type="text" name="github"
+                                {% if user.github %}
+                                   value="{{ user.github }}"
+                                {% endif %}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">Instagram</td>
+                        <td><input type="text" name="instagram"
+                                {% if user.instagram %}
+                                   value="{{ user.instagram }}"
+                                {% endif %}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">Telegram</td>
+                        <td>
+                            <input type="text" name="telegram"
+                                    {% if  user.telegram %}
+                                   value="{{ user.telegram }}"
+                                    {% endif %}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">LinkedIn</td>
+                        <td>
+                            <input type="text" name="linkedin"
+                                   {% if user.linkedin %}value="{{ user.linkedin }}"{% endif %} placeholder="请输入链接">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">个然简介</td>
+                        <td><textarea type="text" name="biography"
+                        >{% if user.biography %}{{ user.biography }}{% endif %}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="right aligned">
+                            <button class="ui red button" type="submit">保存设置</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    {% endif %}
+
+    <script>
+        $(".cebian4").addClass('active')
+    </script>
 {% endblock %}
 
 

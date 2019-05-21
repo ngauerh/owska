@@ -61,16 +61,16 @@
                 <div class="five wide column">
                     <img class="fluid  ui image" src="{{ MEDIA_URL }}{{ user_info.avatar }}">
                     <div class="ui fluid large vertical menu">
-                        <a class="active item">
+                        <a class="item cebian1" href="{% url 'users:member_info' user_info.username %}">
                             <div class="column"><i class="clone outline icon"></i>帖子</div>
                         </a>
-                        <a class="item" href="{% url 'users:member_comments' user_info.username %}">
+                        <a class="item cebian2" href="{% url 'users:member_comments' user_info.username %}">
                             <div class="column"><i class="comment outline icon"></i>回复</div>
                         </a>
-                        <a class="item" href="{% url 'users:member_collected' user_info.username %}">
+                        <a class="item cebian3" href="{% url 'users:member_collected' user_info.username %}">
                             <div class="column"><i class="star outline icon"></i>收藏</div>
                         </a>
-                        <a class="item" href="{% url 'users:member_details' user_info.username %}">
+                        <a class="item cebian4" href="{% url 'users:member_details' user_info.username %}">
                             <div class="column"><i class="user outline icon"></i>信息</div>
                         </a>
                     </div>
@@ -84,7 +84,7 @@
                                 <a class="ui green circular label">Online</a>
                                 <a class="ui grey circular label">Offline</a>
                                 <span class="date">Joined {{ user_info.date_joined }}</span>
-                                <span class="email">{{ user_info.email }}</span>
+                                <span class="email">{% if user_info.id == user.id %}{{ user_info.email }}{% endif %}</span>
                             </div>
                         </div>
                     </div>
@@ -100,22 +100,6 @@
 {% block footer %}
     {% include 'footer.html' %}
 {% endblock %}
-
-<script>
-    $(document)
-        .ready(function () {
-            $('.ui.menu a.item')
-                .on('click', function () {
-                    $(this)
-                        .addClass('active')
-                        .siblings()
-                        .removeClass('active')
-                    ;
-                })
-            ;
-        })
-    ;
-</script>
 </body>
 </html>
 

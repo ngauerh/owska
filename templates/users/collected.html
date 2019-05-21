@@ -12,7 +12,7 @@
 
 {% block body %}
 
-    <h4>您已收藏了{{ topic_sum }}条帖子</h4>
+    <h4>您已收藏了{{ collect_sum }}条帖子</h4>
     <div class="ui card fluid">
         {% for collect in collect_list %}
             <div class="ui card fluid" style="margin: unset">
@@ -99,6 +99,10 @@
         {% endif %}
 
     </div>
+
+    <script>
+        $(".cebian3").addClass('active')
+    </script>
 {% endblock %}
 
 
