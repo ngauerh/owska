@@ -23,6 +23,7 @@ def default_avatars():
 class User(AbstractUser):
     name = models.CharField(max_length=50, blank=True)
     avatar = models.ImageField(null=True, upload_to=user_directory_path, default=default_avatars)  # 头像
+    is_online = models.IntegerField('是否在线', default=0)
     website = models.URLField('个人网站', max_length=100, null=True)
     company = models.CharField('所在公司', max_length=50, null=True)
     location = models.CharField('所在地', max_length=50, null=True)
