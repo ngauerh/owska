@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load humanize %}
+{% load shortnaturaltime %}
 
 {% block head %}
 
@@ -63,7 +63,7 @@
                     <a class="" style="background-color: #f5f5f5;padding: 3px" href="{% url 'forum:board' topic.board.path %}">{{ topic.board }}</a> &nbsp;•&nbsp;
                     <strong><a href="{% url "users:member_info" topic.starter.username %}"
                                style="font-weight: bold">{{ topic.starter }}</a></strong> &nbsp;•&nbsp;
-                    {{ topic.last_updated|naturaltime }}
+                    {{ topic.last_updated|shortnaturaltime }}
                 </div>
             </div>
 
