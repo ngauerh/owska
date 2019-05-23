@@ -9,8 +9,8 @@
 
 
 {% block body %}
-
-<form class="ui form" action="{% url 'users:change_avatar' %}" method="post" enctype="multipart/form-data">
+<div class="ui card" style="width: 95%;margin: 0px">
+<form class="ui form segment" action="{% url 'users:change_avatar' %}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
   <div class="field">
     <label>修改头像</label>
@@ -18,7 +18,7 @@
   </div>
   <button class="ui green button" type="submit">提交</button>
 </form>
-
+</div>
 
 {% endblock %}
 

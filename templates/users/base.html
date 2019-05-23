@@ -1,4 +1,5 @@
 {% load static from staticfiles %}
+{% load shortnaturaltime %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -81,9 +82,13 @@
                             <a class="header">{{ user_info.name }}</a>
                             <div class="sep5"></div>
                             <div class="meta">
+                                {% if user_info.last_activity|isonline %}
                                 <a class="ui green circular label">Online</a>
-                                <a class="ui grey circular label">Offline</a>
+                                    {% else %}
+                                    <a class="ui grey circular label">Offline</a>
+                                {% endif %}
                                 <span class="date">Joined {{ user_info.date_joined }}</span>
+                                <span class="date">上次活动: {{ user_info.last_activity|shortnaturaltime }}</span>
                                 <span class="email">{% if user_info.id == user.id %}{{ user_info.email }}{% endif %}</span>
                             </div>
                         </div>

@@ -16,3 +16,12 @@ def shortnaturaltime(value):
         else:
             return str(c.seconds//3600) + '小时之前'
 
+
+@register.filter
+def isonline(value):
+    c = datetime.datetime.now(datetime.timezone.utc)-value
+    if c.seconds < 120:
+        return True
+    else:
+        return False
+

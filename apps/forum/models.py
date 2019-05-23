@@ -99,3 +99,10 @@ class Collected(models.Model):
     id = models.AutoField(primary_key=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     starter = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+# 板块收藏
+class CollectedBoard(models.Model):
+    id = models.AutoField(primary_key=True)
+    board = models.ForeignKey(Board, on_delete=models.CASCADE)
+    starter = models.ForeignKey(User, on_delete=models.CASCADE)

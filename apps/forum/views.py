@@ -51,6 +51,7 @@ def board_detail(request, path):
 
     page = request.GET.get('page')
     topic_list = paginator.get_page(page)
+    board_all = contact_list.count()
     return render(request, 'topic/board.html', locals())
 
 
@@ -109,6 +110,7 @@ class CommentStars(View):
         return JsonResponse(res)
 
 
+# 收藏主题
 class CollectTopic(View):
     @method_decorator(login_required)
     def post(self, request):
@@ -137,3 +139,30 @@ class UnCollectTopic(View):
             return JsonResponse(res)
 
 
+# 收藏板块
+class CollectBoard(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        try:
+            s = CollectedBoard()
+            s.starter_id = request.user.id
+            s.board_id = request.POST['collect']
+            s.save()
+            res = {"success": True, "msg": "收藏成功"}
+            return JsonResponse(res)
+        except:
+            res = {"success": False, "msg": "不好意思，发生未知错误"}
+            return JsonResponse(res)
+
+
+# 取消收藏
+class UnCollectBoard(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        try:
+            CollectedBoard.objects.filter(board_id=request.POST['collect'], starter_id=request.user.id).first().delete()
+            res = {"success": True, "msg": "取消收藏成功"}
+            return JsonResponse(res)
+        except:
+            res = {"success": False, "msg": "不好意思，发生未知错误"}
+            return JsonResponse(res)

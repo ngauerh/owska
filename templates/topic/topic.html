@@ -38,14 +38,16 @@
                 <img class="ui avatar image" src="{{ MEDIA_URL }}{{ t.starter.avatar }}">
             </div>
             <div class="header">{{ t.title }}</div>
-            <small>
+            <div class="sep5"></div>
+            <div class="sep5"></div>
+            <div class="meta">
                 <a href="{% url 'users:member_info' t.starter %}">{{ t.starter }}</a> &nbsp;•&nbsp;
-                {{ t.last_updated|naturaltime }}
-            </small>
+                {{ t.last_updated }}
+            </div>
         </div>
 
         <div class="content">
-            <h4 class="ui sub header">Activity</h4>
+{#            <h4 class="ui sub header">Activity</h4>#}
             <div class="ui small feed">
                 {{ t.get_reply_as_markdown|safe }}
             </div>

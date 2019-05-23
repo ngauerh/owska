@@ -34,6 +34,29 @@
                 <div class="active section">{{ bid.name }}</div>
             </div>
         </div>
+        <div class="content" style="background-color: #fAfAfA;padding: 10px">
+            <div class="ui large breadcrumb">
+                <a class="section" href="/">首页</a>
+                <i class="right chevron icon divider"></i>
+                <div class="active section">{{ bid.name }}</div>
+            </div>
+            共有{{ board_all }}个主题
+            {% if collect %}
+                <a onclick="uncollect('{{ bid.id }}')">
+                    <span class="right floated star">
+                      <i class="star yellow icon"></i>
+                      取消收藏
+                    </span>
+                </a>
+            {% else %}
+                <a onclick="collect('{{ bid.id }}')">
+                    <span class="right floated star">
+                      <i class="star  icon"></i>
+                      收藏
+                    </span>
+                </a>
+            {% endif %}
+        </div>
         {% for topic in topic_list %}
 
 
@@ -57,7 +80,7 @@
 
         {% endfor %}
 
-</div>
+    </div>
     <br>
 
     <div class="ui pagination menu">
@@ -125,9 +148,10 @@
 
     </div>
 
-    <div class="ui input" >
-            <form class="ui action right input" action="{% url 'forum:board' bid.path %}" method="get" style="margin-right: 100px">
-            <input type="text" name="page" style = "width:50px;" >
+    <div class="ui input">
+        <form class="ui action right input" action="{% url 'forum:board' bid.path %}" method="get"
+              style="margin-right: 100px">
+            <input type="text" name="page" style="width:50px;">
         </form>
     </div>
 
@@ -149,6 +173,51 @@
                 ;
             })
         ;
+    </script>
+    <script>
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+        });
+
+        function collect(cc) {
+            event.preventDefault();
+            //使a自带的方法失效
+            $.ajax({
+                url: '{% url 'forum:board_collect' %}',
+                method: "post",
+                dataType: "json",
+                data: {'collect': cc},
+                success: function (data) {
+                    if (data["success"] == true) {
+                        alert(data["msg"])
+                        window.location.reload();
+                    } else {
+                        alert(data["msg"]);
+                    }
+                }
+            });
+        }
+
+        {#取消收藏#}
+
+        function uncollect(cc) {
+            event.preventDefault();
+            //使a自带的方法失效
+            $.ajax({
+                url: '{% url 'forum:board_uncollect' %}',
+                method: "post",
+                dataType: "json",
+                data: {'collect': cc},
+                success: function (data) {
+                    if (data["success"] == true) {
+                        alert(data["msg"])
+                        window.location.reload();
+                    } else {
+                        alert(data["msg"]);
+                    }
+                }
+            });
+        }
     </script>
 {% endblock %}
 

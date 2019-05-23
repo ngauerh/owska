@@ -16,7 +16,7 @@ def user_directory_path(instance, filename):
 
 
 def default_avatars():
-    filename = str(random.randint(1, 10)) + '.png'
+    filename = str(random.randint(0, 10)) + '.png'
     return os.path.join('avatars/default', filename)
 
 
@@ -24,6 +24,8 @@ class User(AbstractUser):
     name = models.CharField(max_length=50, blank=True)
     avatar = models.ImageField(null=True, upload_to=user_directory_path, default=default_avatars)  # 头像
     is_online = models.IntegerField('是否在线', default=0)
+    last_activity = models.DateTimeField('最后访问时间', auto_now_add=True, null=True)
+    activity_ip = models.GenericIPAddressField('ip地址', null=True)
     website = models.URLField('个人网站', max_length=100, null=True)
     company = models.CharField('所在公司', max_length=50, null=True)
     location = models.CharField('所在地', max_length=50, null=True)
