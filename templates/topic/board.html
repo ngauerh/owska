@@ -34,29 +34,35 @@
                 <div class="active section">{{ bid.name }}</div>
             </div>
         </div>
-        <div class="content" style="background-color: #fAfAfA;padding: 10px">
-            <div class="ui large breadcrumb">
-                <a class="section" href="/">首页</a>
-                <i class="right chevron icon divider"></i>
-                <div class="active section">{{ bid.name }}</div>
-            </div>
-            共有{{ board_all }}个主题
+
+        <div class="content">
             {% if collect %}
-                <a onclick="uncollect('{{ bid.id }}')">
-                    <span class="right floated star">
+                <span class="right floated star">
+                <span>共有 {{ board_all }} 个主题 &nbsp; • &nbsp;</span>
+                    <span onclick="uncollect('{{ bid.id }}')">
                       <i class="star yellow icon"></i>
                       取消收藏
                     </span>
-                </a>
+                </span>
             {% else %}
-                <a onclick="collect('{{ bid.id }}')">
-                    <span class="right floated star">
+                <span class="right floated star">
+                <span>共有 {{ board_all }} 个主题 &nbsp; • &nbsp;</span>
+                    <span onclick="collect('{{ bid.id }}')">
                       <i class="star  icon"></i>
-                      收藏
+                      <a>收藏</a>
                     </span>
-                </a>
+                </span>
             {% endif %}
+            <div class="header">{{ bid.name }}</div>
+            <div class="description">
+                <p>{{ bid.description }}</p>
+            </div>
+            <button class="right floated mini ui positive button" onclick="window.open('{% url 'forum:new' %}')">
+                发布新主题
+            </button>
         </div>
+
+
         {% for topic in topic_list %}
 
 

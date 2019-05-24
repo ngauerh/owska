@@ -214,6 +214,9 @@ def member_info(request, username):
     topic_list = paginator.get_page(page)
 
     topic_sum = topic_all.count()
+
+    follow = FollowUser.objects.filter(follower_id=user_info.id, master_id=request.user.id)
+    block = BlockUser.objects.filter(blocker_id=user_info.id, master_id=request.user.id)
     return render(request, 'users/member.html', locals())
 
 
@@ -262,6 +265,71 @@ class MemberDetails(View):
             print(f.errors)
             res = {"success": False, "msg": "信息保存失败"}
         return JsonResponse(res)
+
+
+# 用户关注
+class FollowingUser(View):
+    def get(self, request):
+        f_list = FollowUser.objects.filter(master=request.user.id).all()
+        follow_count = f_list.count()
+        return render(request, locals())
+
+    @method_decorator(login_required)
+    def post(self, request):
+        try:
+            u = User.objects.filter(username=request.POST['username']).first().id
+            f = FollowUser.objects.create(master_id=request.user.id, follower_id=u)
+            f.save()
+            res = {"success": True, "msg": "关注成功"}
+            return JsonResponse(res)
+        except:
+            res = {"success": False, "msg": "关注失败"}
+            return JsonResponse(res)
+
+
+# 取消关注
+class UnFollowUser(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        try:
+            u = User.objects.filter(username=request.POST['username']).first().id
+            FollowUser.objects.filter(master_id=request.user.id, follower_id=u).delete()
+
+            res = {"success": True, "msg": "取消关注成功"}
+            return JsonResponse(res)
+        except:
+            res = {"success": False, "msg": "取消关注失败"}
+            return JsonResponse(res)
+
+
+# 拉黑
+class BlockingUser(View):
+    def get(self, request):
+        f_list = BlockUser.objects.filter(master=request.user.id).all()
+        follow_count = f_list.count()
+        return render(request, locals())
+
+    @method_decorator(login_required)
+    def post(self, request):
+        u = User.objects.filter(username=request.POST['username']).first().id
+        f = BlockUser.objects.create(master_id=request.user.id, blocker_id=u)
+        f.save()
+        res = {"success": True, "msg": "block成功"}
+        return JsonResponse(res)
+
+
+# 解除拉黑
+class UnBlockUser(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        try:
+            u = User.objects.filter(username=request.POST['username']).first().id
+            BlockUser.objects.filter(master_id=request.user.id, blocker_id=u).delete()
+            res = {"success": True, "msg": "取消关注成功"}
+            return JsonResponse(res)
+        except:
+            res = {"success": False, "msg": "取消关注失败"}
+            return JsonResponse(res)
 
 
 # 修改头像

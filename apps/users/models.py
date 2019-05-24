@@ -40,3 +40,16 @@ class User(AbstractUser):
     class Meta(AbstractUser.Meta):
         pass
 
+
+# 关注用户
+class FollowUser(models.Model):
+    id = models.AutoField(primary_key=True)
+    master = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follow_master')
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
+
+
+# 拉黑用户
+class BlockUser(models.Model):
+    id = models.AutoField(primary_key=True)
+    master = models.ForeignKey(User, on_delete=models.CASCADE, related_name='block_master')
+    blocker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocker')

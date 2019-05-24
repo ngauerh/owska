@@ -106,3 +106,6 @@ class CollectedBoard(models.Model):
     id = models.AutoField(primary_key=True)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     starter = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+
