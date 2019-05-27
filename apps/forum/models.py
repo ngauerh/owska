@@ -25,6 +25,7 @@ class Board(models.Model):
     name = models.CharField(max_length=30, unique=True)  # 板块名
     description = models.CharField(max_length=100)  # 简介
     path = models.CharField(max_length=100)  # 板块url
+    icon = models.ImageField(null=True, upload_to='icon/board')
 
     class Meta:
         verbose_name = '板块'

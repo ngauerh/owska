@@ -12,7 +12,6 @@ class TopicAdmin(admin.ModelAdmin):
     list_display = ('title', 'starter', 'last_updated', 'board', 'views', 'comment_num')
     search_fields = ('title', 'starter', "board__name",)
     filter_horizontal = ('tags',)
-    list_filter = ('board', 'starter')
 
 
 admin.site.register(Tag)

@@ -47,7 +47,7 @@ class GetBoard(viewsets.ModelViewSet):
     serializer_class = BoardSerializer
 
 
-# 帖子
+# 主题
 def topic(request, path):
     t = Topic.objects.filter(path=path).first()
     comments = Comments.objects.filter(topic=t.id).all()
@@ -92,10 +92,10 @@ class NewTopic(View):
             res = {"success": True, "msg": "成功"}
             return HttpResponse(json.dumps(res), content_type="application/json")
         else:
-            print(form.errors)
             return render(request, 'topic/new_topic.html')
 
 
+# 回帖评论
 class TopicComments(View):
     @method_decorator(login_required)
     def post(self, request):
@@ -114,6 +114,7 @@ class TopicComments(View):
             print(f.errors)
 
 
+# 赞同评论
 class CommentStars(View):
     @method_decorator(login_required)
     def post(self, request):
@@ -126,6 +127,16 @@ class CommentStars(View):
 
 # 收藏主题
 class CollectTopic(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        get_collect_topic = Collected.objects.filter(starter_id=request.user.id).all().order_by('-pk')
+        paginator = Paginator(get_collect_topic, 5)
+
+        page = request.GET.get('page')
+        topic_list = paginator.get_page(page)
+        board_all = get_collect_topic.count()
+        return render(request, 'users/collect_topic.html', locals())
+
     @method_decorator(login_required)
     def post(self, request):
         try:
@@ -140,7 +151,7 @@ class CollectTopic(View):
             return JsonResponse(res)
 
 
-# 取消收藏
+# 取消主题收藏
 class UnCollectTopic(View):
     @method_decorator(login_required)
     def post(self, request):
@@ -156,6 +167,11 @@ class UnCollectTopic(View):
 # 收藏板块
 class CollectBoard(View):
     @method_decorator(login_required)
+    def get(self, request):
+        get_collect_board = CollectedBoard.objects.filter(starter_id=request.user.id).all()
+        return render(request, 'users/collect_board.html', locals())
+
+    @method_decorator(login_required)
     def post(self, request):
         try:
             s = CollectedBoard()
@@ -169,7 +185,7 @@ class CollectBoard(View):
             return JsonResponse(res)
 
 
-# 取消收藏
+# 取消板块收藏
 class UnCollectBoard(View):
     @method_decorator(login_required)
     def post(self, request):

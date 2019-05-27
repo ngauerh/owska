@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load shortnaturaltime %}
+
+{% block head %}
+
+
+{% endblock %}
+
+{#样式#}
+{% block css %}
+    <style>
+        .meta {
+            padding-top: 5px;
+            font-size: 5px;
+        }
+
+        .topic_name a {
+            font-size: 16px;
+            color: #778087;
+        }
+    </style>
+{% endblock %}
+
+
+{# 主体 #}
+{% block body %}
+
+
+    <div class="ui three column grid" style="width: 95%;margin: 0px">
+    {% for foo in get_collect_board  %}
+        <div class="column">
+            <div class="ui fluid card">
+                <div class="image">
+                    <img src="{{ MEDIA_URL }}{{ foo.board.icon }}">
+                </div>
+                <div class="content">
+                    <a class="header">{{ foo.board.name }}</a>
+                </div>
+            </div>
+        </div>
+     {% endfor %}
+    </div>
+
+
+    <script>
+        $(document)
+            .ready(function () {
+                $('.ui.menu a.item')
+                    .on('click', function () {
+                        $(this)
+                            .addClass('active')
+                            {#.addClass('red')#}
+                            .siblings()
+                            .removeClass('active')
+                        ;
+                    })
+                ;
+            })
+        ;
+    </script>
+{% endblock %}
+

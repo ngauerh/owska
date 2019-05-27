@@ -19,14 +19,18 @@
                     <tbody>
                     <tr>
                         <td style="padding: 0px">
+                            <a href="{% url 'forum:board_collect' %}">
                             <span style="text-align: center;display:block;">{{ collect_board_count }}</span>
                             <div class="sep3"></div>
                             <span style="text-align: center;display:block;">节点收藏</span>
+                            </a>
                         </td>
                         <td style="padding: 0px">
+                            <a href="{% url 'forum:topic_collect' %}">
                             <span style="text-align: center;display:block;">{{ collect_topic_count }}</span>
                             <div class="sep3"></div>
                             <span style="text-align: center;display:block;">主题收藏</span>
+                                </a>
                         </td>
                         <td style="padding: 0px">
                             <span style="text-align: center;display:block;">{{ follow_user_count }}</span>
