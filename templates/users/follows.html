@@ -1,10 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load shortnaturaltime %}
 
-</body>
-</html>
+{% block head %}
+
+
+{% endblock %}
+
+{#样式#}
+{% block css %}
+    <style>
+        .meta {
+            padding-top: 5px;
+            font-size: 5px;
+        }
+
+        .topic_name a {
+            font-size: 16px;
+            color: #778087;
+        }
+    </style>
+{% endblock %}
+
+
+{# 主体 #}
+{% block body %}
+
+
+    <div class="ui three column grid" style="width: 95%;margin: 0px">
+    {% for foo in follow_count  %}
+        <div class="column">
+            <div class="ui fluid card">
+                <div class="image">
+                    <img src="{{ MEDIA_URL }}{{ foo.follower.avatar }}">
+                </div>
+                <div class="content">
+                    <a class="header" href="{% url 'users:member_info' foo.follower.username %}">{{ foo.follower.name }}</a>
+                </div>
+            </div>
+        </div>
+     {% endfor %}
+    </div>
+
+
+    <script>
+        $(document)
+            .ready(function () {
+                $('.ui.menu a.item')
+                    .on('click', function () {
+                        $(this)
+                            .addClass('active')
+                            {#.addClass('red')#}
+                            .siblings()
+                            .removeClass('active')
+                        ;
+                    })
+                ;
+            })
+        ;
+    </script>
+{% endblock %}
+

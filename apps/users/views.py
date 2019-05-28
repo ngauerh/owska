@@ -52,12 +52,12 @@ class MyRedis(object):
 
 # 注册
 class Register(View):
-    @staticmethod
-    def get(request):
+    # noinspection PyMethodMayBeStatic
+    def get(self, request):
         return render(request, 'register.html')
 
-    @staticmethod
-    def post(request):
+    # noinspection PyMethodMayBeStatic
+    def post(self, request):
         user = User.objects.all()
         verify_code = request.session['verify_code']
         if verify_code != request.POST['captcha'].lower():
@@ -94,8 +94,8 @@ class Register(View):
 
 # 激活
 class ActiveView(View):
-    @staticmethod
-    def get(request, token):
+    # noinspection PyMethodMayBeStatic
+    def get(self, request, token):
         """激活"""
         serializer = Serializer(settings.SECRET_KEY, 3600 * 7)
         try:
@@ -271,8 +271,8 @@ class MemberDetails(View):
 class FollowingUser(View):
     def get(self, request):
         f_list = FollowUser.objects.filter(master=request.user.id).all()
-        follow_count = f_list.count()
-        return render(request, locals())
+        follow_count = f_list
+        return render(request, 'users/follows.html', locals())
 
     @method_decorator(login_required)
     def post(self, request):
@@ -304,10 +304,11 @@ class UnFollowUser(View):
 
 # 拉黑
 class BlockingUser(View):
+    @method_decorator(login_required)
     def get(self, request):
         f_list = BlockUser.objects.filter(master=request.user.id).all()
-        follow_count = f_list.count()
-        return render(request, locals())
+        follow_count = f_list
+        return render(request, 'users/follows.html', locals())
 
     @method_decorator(login_required)
     def post(self, request):
@@ -334,14 +335,12 @@ class UnBlockUser(View):
 
 # 修改头像
 class ChangeAvatar(View):
-    @staticmethod
-    @login_required
-    def get(request):
+    @method_decorator(login_required)
+    def get(self, request):
         return render(request, 'users/change_info.html')
 
-    @staticmethod
-    @login_required
-    def post(request):
+    @method_decorator(login_required)
+    def post(self, request):
         avatar = request.FILES['avatar']
         ob = User.objects.get(id=request.user.id)
         ob.avatar = avatar

@@ -1,10 +1,11 @@
+{% load side_data %}
 <div class="ui cards">
     {% if user.is_authenticated %}
         <div class="card" style="width: 100%">
             <div class="content">
                 <a href="{% url 'users:member_info' user.username %}">
-                <img class="right floated mini ui image" src="{{ MEDIA_URL }}{{ user.avatar }}">
-                    </a>
+                    <img class="right floated mini ui image" src="{{ MEDIA_URL }}{{ user.avatar }}">
+                </a>
                 <div class="header">
                     <a href="{% url 'users:member_info' user.username %}">
                         {{ user.name }}
@@ -20,22 +21,28 @@
                     <tr>
                         <td style="padding: 0px">
                             <a href="{% url 'forum:board_collect' %}">
-                            <span style="text-align: center;display:block;">{{ collect_board_count }}</span>
-                            <div class="sep3"></div>
-                            <span style="text-align: center;display:block;">节点收藏</span>
+                                <span style="text-align: center;display:block;">
+                                    {% collect_board_count request %}
+                                </span>
+                                <div class="sep3"></div>
+                                <span style="text-align: center;display:block;">节点收藏</span>
                             </a>
                         </td>
                         <td style="padding: 0px">
                             <a href="{% url 'forum:topic_collect' %}">
-                            <span style="text-align: center;display:block;">{{ collect_topic_count }}</span>
-                            <div class="sep3"></div>
-                            <span style="text-align: center;display:block;">主题收藏</span>
-                                </a>
+                                <span style="text-align: center;display:block;">{% collect_topic_count request %}
+                                </span>
+                                <div class="sep3"></div>
+                                <span style="text-align: center;display:block;">主题收藏</span>
+                            </a>
                         </td>
                         <td style="padding: 0px">
-                            <span style="text-align: center;display:block;">{{ follow_user_count }}</span>
-                            <div class="sep3"></div>
-                            <span style="text-align: center;display:block;">特别关注</span>
+                            <a href="{% url 'users:follow_user' %}">
+                                <span style="text-align: center;display:block;">{% follow_user_count request %}
+                                </span>
+                                <div class="sep3"></div>
+                                <span style="text-align: center;display:block;">特别关注</span>
+                            </a>
                         </td>
                     </tr>
                     </tbody>

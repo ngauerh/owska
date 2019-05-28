@@ -15,14 +15,6 @@ from pypinyin import lazy_pinyin
 from django.utils.decorators import method_decorator
 
 
-# 侧边栏
-def side(request):
-    collect_board = CollectedBoard.objects.filter(starter_id=request.user.id).all().count()
-    collect_topic = Collected.objects.filter(starter_id=request.user.id).all().count()
-    follow_user = FollowUser.objects.filter(master=request.user.id).all().count()
-    return locals()
-
-
 # 首页
 def index(request):
     tab = request.GET.get('tab')
@@ -35,9 +27,6 @@ def index(request):
     else:
         topic_list = Topic.objects.select_related('starter', 'board').order_by('-pk')[:45]
 
-    collect_board_count = side(request)['collect_board']
-    collect_topic_count = side(request)['collect_topic']
-    follow_user_count = side(request)['follow_user']
     return render(request, 'index.html', locals())
 
 
