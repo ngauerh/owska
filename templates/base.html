@@ -39,7 +39,13 @@
             color: #666666;
             text-decoration: underline;
         }
+
+        .ui.footer.segment {
+            margin: 7em 0em 0em;
+            padding: 4em 0em;
+        }
     </style>
+
     {% block css %}
 
 
@@ -73,21 +79,21 @@
     {% include 'footer.html' %}
 {% endblock %}
 
-  <script>
-  $(document)
-    .ready(function() {
-      $('.ui.menu a.item')
-        .on('click', function() {
-          $(this)
-            .addClass('active')
-            .siblings()
-            .removeClass('active')
-          ;
-        });
-       $('.ui.dropdown').dropdown();
-    })
-  ;
-  </script>
+<script>
+    $(document)
+        .ready(function () {
+            $('.ui.menu a.item')
+                .on('click', function () {
+                    $(this)
+                        .addClass('active')
+                        .siblings()
+                        .removeClass('active')
+                    ;
+                });
+            $('.ui.dropdown').dropdown();
+        })
+    ;
+</script>
 </body>
 </html>
 

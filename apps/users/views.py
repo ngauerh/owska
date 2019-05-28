@@ -1,3 +1,5 @@
+import json
+
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import render, redirect
@@ -135,8 +137,12 @@ class SignIn(View):
             password = request.POST.get('password')
         if check_password(password, pw.password):
             user = auth.authenticate(username=username, password=password)
-            auth.login(request, user)
-            return redirect(reverse('forum:index'))
+            try:
+                auth.login(request, user)
+                return redirect(reverse('forum:index'))
+            except:
+                res = {"success": False, "msg": "发生未知错误"}
+                return HttpResponse(json.dumps(res), content_type="application/json")
         else:
             context = {'info': '密码错误'}
             return render(request, 'login.html', context)

@@ -26,6 +26,7 @@ def index(request):
             topic_list = Topic.objects.select_related('starter', 'board').order_by('-pk')[:45]
     else:
         topic_list = Topic.objects.select_related('starter', 'board').order_by('-pk')[:45]
+    board_top_list = Board.objects.filter(is_top=1).all()
 
     return render(request, 'index.html', locals())
 

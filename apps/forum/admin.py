@@ -19,4 +19,4 @@ admin.site.register(Tag)
 
 @admin.register(Board)
 class BoardAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'path')
+    list_display = ('name', 'description', 'path', 'is_top')

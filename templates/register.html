@@ -11,7 +11,7 @@
 {% block body %}
 <div class="ui grid">
 
-<div class="seven wide column centered">
+<div class="eleven wide column centered">
 <form class="ui form segment" action="{% url 'users:register' %}" method="post">
     {% csrf_token %}
   <p>注册新用户</p>
@@ -134,4 +134,8 @@ $('.ui.form')
 ;
 
 </script>
+{% endblock %}
+
+{% block side %}
+
 {% endblock %}
