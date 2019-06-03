@@ -51,7 +51,7 @@
             <div class="extra content">
                 <div class="ui two buttons">
                     <a class="ui basic green button" href="{% url 'forum:new' %}">创作新主题</a>
-                    <div class="ui basic red button">今日签到</div>
+                    <div class="ui basic red button" onclick="signed()">今日签到</div>
                 </div>
             </div>
             <div class="extra content">
@@ -133,4 +133,28 @@
         </script>
     {% endif %}
 </div>
+
+    <script>
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+        });
+
+        function signed() {
+            event.preventDefault();
+            //使a自带的方法失效
+            $.ajax({
+                url: '{% url 'users:signed' %}',
+                method: "post",
+                dataType: "json",
+                success: function (data) {
+                    if (data["success"] == true) {
+                        alert(data["msg"])
+                        window.location.reload();
+                    } else {
+                        alert(data["msg"]);
+                    }
+                }
+            });
+        }
+</script>
 

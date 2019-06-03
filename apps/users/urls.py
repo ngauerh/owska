@@ -16,6 +16,8 @@ urlpatterns = [
     path('unfollow/', UnFollowUser.as_view(), name='unfollow'),  # 取消关注
     path('block/', BlockingUser.as_view(), name='block_user'),  # 拉黑
     path('unblock/', UnBlockUser.as_view(), name='unblock'),  # 解除拉黑
+    path('signed/', UserSigned.as_view(), name='signed'),  # 签到
+
     path('change_avatar', ChangeAvatar.as_view(), name='change_avatar'),  # 修改头像
     path('forget/', ForgetPassword.as_view(), name='forget'),  # 忘记密码
     path('reset/<token>/', ResetPassword.as_view(), name='reset'),  # 重置密码

@@ -53,3 +53,11 @@ class BlockUser(models.Model):
     id = models.AutoField(primary_key=True)
     master = models.ForeignKey(User, on_delete=models.CASCADE, related_name='block_master')
     blocker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocker')
+
+
+# 默认发帖次数
+class PostNumbers(models.Model):
+    id = models.AutoField(primary_key=True)
+    master = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户', related_name='user_post_times')
+    num_times = models.IntegerField('发帖次数', default=5, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)  # 创建时间

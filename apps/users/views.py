@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.core.paginator import Paginator
@@ -336,6 +337,24 @@ class UnBlockUser(View):
             return JsonResponse(res)
         except:
             res = {"success": False, "msg": "取消关注失败"}
+            return JsonResponse(res)
+
+
+# 签到
+class UserSigned(View):
+    @method_decorator(login_required)
+    def post(self, request):
+        try:
+            u = PostNumbers.objects.filter(master_id=request.user.id).first()
+            if u.created_at.date() == datetime.datetime.now(datetime.timezone.utc).date():
+                res = {"success": False, "msg": "今日已签到过，请勿重复签到"}
+                return JsonResponse(res)
+            u.num_times += 1
+            u.save()
+            res = {"success": True, "msg": "签到成功，发帖次数+1"}
+            return JsonResponse(res)
+        except:
+            res = {"success": False, "msg": "签到失败"}
             return JsonResponse(res)
 
 
