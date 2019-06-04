@@ -10,7 +10,7 @@ import json
 import time
 from .forms import *
 from .models import *
-from users.models import User, FollowUser
+from users.models import User, FollowUser, PostNumbers
 from pypinyin import lazy_pinyin
 from django.utils.decorators import method_decorator
 
@@ -64,7 +64,8 @@ class NewTopic(View):
     @method_decorator(login_required)
     def get(self, request):
         obj = BoardList()
-        return render(request, 'topic/new_topic.html', {"obj": obj})
+        p_times = PostNumbers.objects.filter(master_id=request.user.id).first().num_times
+        return render(request, 'topic/new_topic.html', locals())
 
     @method_decorator(login_required)
     def post(self, request):
@@ -79,6 +80,9 @@ class NewTopic(View):
             except IntegrityError as e:
                 t.path = '-'.join(lazy_pinyin(request.POST['title'])).replace(' ', '') + '-' + str(time.time())[:10]
                 t.save()
+            p = PostNumbers.objects.filter(master_id=request.user.id).first()
+            p.num_times -= 1
+            p.save()
             res = {"success": True, "msg": "成功"}
             return HttpResponse(json.dumps(res), content_type="application/json")
         else:

@@ -11,9 +11,9 @@
                         {{ user.name }}
                     </a>
                 </div>
-{#                <div class="meta">#}
-{#                    今日活跃度排名 4364#}
-{#                </div>#}
+                {#                <div class="meta">#}
+                {#                    今日活跃度排名 4364#}
+                {#                </div>#}
             </div>
             <div class="extra content">
                 <table class="ui very basic table">
@@ -51,7 +51,10 @@
             <div class="extra content">
                 <div class="ui two buttons">
                     <a class="ui basic green button" href="{% url 'forum:new' %}">创作新主题</a>
-                    <div class="ui basic red button" onclick="signed()">今日签到</div>
+                    {% signed_date request as s_date %}
+                    {% if s_date %}
+                        <div class="ui basic red button" onclick="signed()">今日签到</div>
+                    {% endif %}
                 </div>
             </div>
             <div class="extra content">
@@ -134,27 +137,27 @@
     {% endif %}
 </div>
 
-    <script>
-        $.ajaxSetup({
-            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
-        });
+<script>
+    $.ajaxSetup({
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+    });
 
-        function signed() {
-            event.preventDefault();
-            //使a自带的方法失效
-            $.ajax({
-                url: '{% url 'users:signed' %}',
-                method: "post",
-                dataType: "json",
-                success: function (data) {
-                    if (data["success"] == true) {
-                        alert(data["msg"])
-                        window.location.reload();
-                    } else {
-                        alert(data["msg"]);
-                    }
+    function signed() {
+        event.preventDefault();
+        //使a自带的方法失效
+        $.ajax({
+            url: '{% url 'users:signed' %}',
+            method: "post",
+            dataType: "json",
+            success: function (data) {
+                if (data["success"] == true) {
+                    alert(data["msg"])
+                    window.location.reload();
+                } else {
+                    alert(data["msg"]);
                 }
-            });
-        }
+            }
+        });
+    }
 </script>
 

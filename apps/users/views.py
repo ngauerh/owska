@@ -115,6 +115,12 @@ class ActiveView(View):
             u.save()
             # 删除token
             MyRedis().del_list(email)
+
+            # 发帖次数
+            pw = User.objects.filter(username=u.username).first()
+            p = PostNumbers()
+            p.master_id = pw.id
+            p.save()
             context = {'info': "激活成功"}
             return render(request, 'info.html', context)
         except:
@@ -350,6 +356,7 @@ class UserSigned(View):
                 res = {"success": False, "msg": "今日已签到过，请勿重复签到"}
                 return JsonResponse(res)
             u.num_times += 1
+            u.created_at = datetime.datetime.now()
             u.save()
             res = {"success": True, "msg": "签到成功，发帖次数+1"}
             return JsonResponse(res)

@@ -1,6 +1,7 @@
 from django import template
-from users.models import FollowUser
+from users.models import FollowUser, PostNumbers
 from forum.models import *
+import datetime
 register = template.Library()
 
 
@@ -20,3 +21,12 @@ def collect_topic_count(request):
 def follow_user_count(request):
     follow_user_count = FollowUser.objects.filter(master=request.user.id).all().count()
     return follow_user_count
+
+
+@register.simple_tag
+def signed_date(request):
+    u = PostNumbers.objects.filter(master_id=request.user.id).first()
+    if u.created_at.date() == datetime.datetime.now(datetime.timezone.utc).date():
+        return False
+    else:
+        return True

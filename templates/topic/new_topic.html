@@ -12,6 +12,7 @@
 
 
 {% block body %}
+    {% if p_times %}
     <div class="ui grid">
 
         <div class="thirteen wide column centered">
@@ -100,4 +101,8 @@
   })
 ;
     </script>
+
+    {% else %}
+        您的发帖次数已用完，每日签到可以增加发帖次数。
+    {% endif %}
 {% endblock %}

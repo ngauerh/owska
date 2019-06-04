@@ -42,19 +42,20 @@ class Topic(models.Model):
     id, 标题，内容，发帖人，发帖时间，所属板块，标签, 阅读量, 路径
     """
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
-    content = models.TextField()
-    starter = models.ForeignKey(User, related_name='topics', on_delete=models.CASCADE)
-    last_updated = models.DateTimeField(auto_now_add=True)
-    board = models.ForeignKey(Board, related_name='topics', on_delete=models.CASCADE)
+    title = models.CharField('标题', max_length=255)
+    content = models.TextField('内容')
+    starter = models.ForeignKey(User, related_name='topics', verbose_name='发帖人', on_delete=models.CASCADE)
+    last_updated = models.DateTimeField('更新时间', auto_now_add=True)
+    board = models.ForeignKey(Board, related_name='topics', verbose_name='节点', on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, verbose_name='标签', max_length=100, blank=True)
-    views = models.PositiveIntegerField(default=0)  # 浏览量
-    comment_num = models.IntegerField(default=0)  # 评论数
+    views = models.PositiveIntegerField('浏览量', default=0)  # 浏览量
+    comment_num = models.IntegerField('评论数', default=0)  # 评论数
     path = models.CharField('路径', max_length=250, unique=True)
+    ban_comments = models.IntegerField('是否允许回复', default=1)
 
     class Meta:
         verbose_name = '主题'
-        verbose_name_plural = "主题"   # 复数
+        verbose_name_plural = "主题"
 
     def __str__(self):
         return self.title
@@ -63,37 +64,32 @@ class Topic(models.Model):
         return mark_safe(markdown(self.content, safe_mode='escape'))
 
 
-# 帖子
-class Post(models.Model):
-    id = models.AutoField(primary_key=True)
-    message = models.TextField(blank=False)  # 内容
-    topic = models.ForeignKey(Topic, related_name='posts', on_delete=models.CASCADE)  # 所属主题
-    created_at = models.DateTimeField(auto_now_add=True)  # 创建时间
-    created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)  # 发帖人
-
-    def __str__(self):
-        truncated_message = Truncator(self.message)
-        return truncated_message.chars(30)
-
-
-# 评论表
+# 回复表
 class Comments(models.Model):
     id = models.AutoField(primary_key=True)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, verbose_name='主题',)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='回复者',)
     content = models.TextField(blank=False)
     stars = models.IntegerField(default=0)
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = '评论'
-        verbose_name_plural = "评论"   # 复数
+        verbose_name_plural = "评论"
 
     def __str__(self):
-        return self.content
+        return self.content[0:100]
 
     def get_reply_as_markdown(self):
         return mark_safe(markdown(self.content, safe_mode='escape'))
+
+    def short_content(self):
+        if len(str(self.content)) > 100:
+            return '{}...'.format(str(self.content)[0:100])
+        else:
+            return str(self.content)
+
+    short_content.allow_tags = True
 
 
 # 用户收藏

@@ -11,7 +11,7 @@ admin.site.site_title = "owska后台管理系统"
 class TopicAdmin(admin.ModelAdmin):
     list_display = ('title', 'starter', 'last_updated', 'board', 'views', 'comment_num')
     search_fields = ('title', 'starter', "board__name",)
-    filter_horizontal = ('tags',)
+    list_per_page = 50
 
 
 admin.site.register(Tag)
@@ -20,3 +20,10 @@ admin.site.register(Tag)
 @admin.register(Board)
 class BoardAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'path', 'is_top')
+
+
+@admin.register(Comments)
+class CommentsAdmin(admin.ModelAdmin):
+    list_display = ('topic', 'short_content', 'author', 'create_time',)
+    search_fields = ('topic__title', 'author__username',)
+    list_per_page = 50
