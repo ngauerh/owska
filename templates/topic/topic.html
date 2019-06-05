@@ -47,7 +47,7 @@
         </div>
 
         <div class="content">
-{#            <h4 class="ui sub header">Activity</h4>#}
+            {#            <h4 class="ui sub header">Activity</h4>#}
             <div class="ui small feed">
                 {{ t.get_reply_as_markdown|safe }}
             </div>
@@ -130,84 +130,92 @@
                 </div>
                 {#                <hr>#}
             {% endfor %}
-
         </div>
     </div>
     <div class="sep20"></div>
-    <div class="ui card" style="width: 95%;margin: 0px">
-        <div class="ui comments" style="width: 100%;margin: 0px;max-width: initial;padding: 10px">
-            <h3 class="ui dividing header">添加一条新回复</h3>
-            <form class="ui reply form" method="post">
-                {% csrf_token %}
-                <div class="field">
-                    <textarea id="comment" name="content"></textarea>
-                </div>
-                <div class="ui primary submit labeled icon button">
-                    <i class="icon edit"></i> 回复
-                </div>
-            </form>
+    {% if t.ban_comments %}
+        <div class="ui card" style="width: 95%;margin: 0px">
+            <div class="ui comments" style="width: 100%;margin: 0px;max-width: initial;padding: 10px">
+                <h3 class="ui dividing header">添加一条新回复</h3>
+                <form class="ui reply form" method="post">
+                    {% csrf_token %}
+                    <div class="field">
+                        <textarea id="comment" name="content"></textarea>
+                    </div>
+                    <div class="ui primary submit labeled icon button">
+                        <i class="icon edit"></i> 回复
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-    <script>
-
-    </script>
-    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <script>
-        $.ajaxSetup({
-            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
-        });
-        //初始化SimpleMDE
-        var simplemde = new SimpleMDE({
-            autosave: {
-                enabled: false,
-                uniqueId: "MyUniqueID",
-                delay: 1000
-            },
-            status: ["autosave", "lines", "words"],
-            spellChecker: false,
-            element: document.getElementById("comment"),
-            promptURLs: true,
-            toolbar: [
-                "bold", "italic", "strikethrough", "heading", "code", "quote", "unordered-list",
-                "ordered-list", "clean-block", "link", "image", "table", "horizontal-rule", "preview", "side-by-side", "fullscreen", "guide",
-                {
-                    name: "uploadImage",//自定义按钮
-                    action: function customFunction(editor) {
-                        console.log(editor);
-                    },
-                    className: "fa fa-star",
-                    title: "Upload Image"
-                }
-            ]
-        });
-        //store
-        $(".submit").on('click', function () {
-            var uploadFormData = {
-                content: simplemde.value(),
-                topic: {{ t.id }}
-            }
-            $.ajax({
-                method: "POST",
-                url: '{% url 'forum:comments' %}',
-                data: uploadFormData,
-                success: function (data) {
-                    if (data.success == true) {
-                        window.location.reload();
-                    } else {
-                        alert(data.msg);
-                    }
-                }
+        <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+        <script>
+            $.ajaxSetup({
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
             });
-        });
-    </script>
+            //初始化SimpleMDE
+            var simplemde = new SimpleMDE({
+                autosave: {
+                    enabled: false,
+                    uniqueId: "MyUniqueID",
+                    delay: 1000
+                },
+                status: ["autosave", "lines", "words"],
+                spellChecker: false,
+                element: document.getElementById("comment"),
+                promptURLs: true,
+                toolbar: [
+                    "bold", "italic", "strikethrough", "heading", "code", "quote", "unordered-list",
+                    "ordered-list", "clean-block", "link", "image", "table", "horizontal-rule", "preview", "side-by-side", "fullscreen", "guide",
+                    {
+                        name: "uploadImage",//自定义按钮
+                        action: function customFunction(editor) {
+                            console.log(editor);
+                        },
+                        className: "fa fa-star",
+                        title: "Upload Image"
+                    }
+                ]
+            });
+            //store
+            $(".submit").on('click', function () {
+                var uploadFormData = {
+                    content: simplemde.value(),
+                    topic: {{ t.id }}
+                }
+                $.ajax({
+                    method: "POST",
+                    url: '{% url 'forum:comments' %}',
+                    data: uploadFormData,
+                    success: function (data) {
+                        if (data.success == true) {
+                            window.location.reload();
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
+            });
+        </script>
 
-    <script type="text/javascript">
+        <script type="text/javascript">
 
-        function reply(n) {
-            simplemde.value('@' + n + '  ');
-        }
-    </script>
+            function reply(n) {
+                simplemde.value('@' + n + '  ');
+            }
+        </script>
 
+    {% else %}
+        <div class="ui middle feed">
+            <div class="event">
+                <div class="content">
+                    <div class="summary" style="text-align: center;color: dimgrey">
+                        该主题无法回复
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
     <script>
         function stars(nn) {
             event.preventDefault();

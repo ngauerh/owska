@@ -1,10 +1,8 @@
 from django.db import models
 from users.models import User
-from django.utils.text import Truncator
 from markdown import markdown
 from django.utils.html import mark_safe
-
-# https://blog.csdn.net/devil_2009/article/details/41735611
+from django.utils.html import format_html
 
 
 # 标签
@@ -22,11 +20,11 @@ class Tag(models.Model):
 # 板块
 class Board(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=30, unique=True)  # 板块名
-    description = models.CharField(max_length=100)  # 简介
-    path = models.CharField(max_length=100)  # 板块url
-    icon = models.ImageField(null=True, upload_to='icon/board')
-    is_top = models.IntegerField(default=0)
+    name = models.CharField('名称', max_length=30, unique=True)  # 板块名
+    description = models.CharField('简介', max_length=100)  # 简介
+    path = models.CharField('路径', max_length=100)  # 板块url
+    icon = models.ImageField('图标', null=True, upload_to='icon/board')
+    is_top = models.BooleanField('是否出现在导航栏', default=False)
 
     class Meta:
         verbose_name = '板块'
@@ -51,7 +49,7 @@ class Topic(models.Model):
     views = models.PositiveIntegerField('浏览量', default=0)  # 浏览量
     comment_num = models.IntegerField('评论数', default=0)  # 评论数
     path = models.CharField('路径', max_length=250, unique=True)
-    ban_comments = models.IntegerField('是否允许回复', default=1)
+    ban_comments = models.BooleanField('是否允许回复', default=True)
 
     class Meta:
         verbose_name = '主题'
@@ -62,6 +60,21 @@ class Topic(models.Model):
 
     def get_reply_as_markdown(self):
         return mark_safe(markdown(self.content, safe_mode='escape'))
+
+    def ban_comments_status(self):
+        if self.ban_comments:
+            color_code = 'green'
+            status = '允许'
+        else:
+            color_code = 'red'
+            status = '禁止'
+        return format_html(
+            '<span style="color: {};">{}</span>',
+            color_code,
+            status
+        )
+
+    ban_comments_status.short_description = u"禁止回复"
 
 
 # 回复表
@@ -74,8 +87,8 @@ class Comments(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = '评论'
-        verbose_name_plural = "评论"
+        verbose_name = '回复'
+        verbose_name_plural = "回复"
 
     def __str__(self):
         return self.content[0:100]

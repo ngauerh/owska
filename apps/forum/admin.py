@@ -9,7 +9,7 @@ admin.site.site_title = "owska后台管理系统"
 
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ('title', 'starter', 'last_updated', 'board', 'views', 'comment_num')
+    list_display = ('title', 'starter', 'last_updated', 'board', 'views', 'comment_num', 'ban_comments_status')
     search_fields = ('title', 'starter', "board__name",)
     list_per_page = 50
 
