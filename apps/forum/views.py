@@ -1,3 +1,5 @@
+import re
+
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, JsonResponse
@@ -8,6 +10,7 @@ from rest_framework import viewsets
 from .serializer import *
 import json
 import time
+import datetime
 from .forms import *
 from .models import *
 from users.models import User, FollowUser, PostNumbers
@@ -18,7 +21,12 @@ from django.utils.decorators import method_decorator
 # 首页
 def index(request):
     tab = request.GET.get('tab')
+    board_top_list = Board.objects.filter(is_top=1).all()
     if tab:
+        if tab == 'hot':
+            topic_list = Topic.objects.filter(last_updated__gte=datetime.datetime.now(datetime.timezone.utc).date())\
+                .select_related('starter', 'board').order_by('-comment_num')[:45]
+            return render(request, 'index.html', locals())
         try:
             bid = Board.objects.get(path=tab)
             topic_list = Topic.objects.filter(board=bid.id).select_related('starter', 'board').order_by('-pk')[:45]
@@ -26,7 +34,6 @@ def index(request):
             topic_list = Topic.objects.select_related('starter', 'board').order_by('-pk')[:45]
     else:
         topic_list = Topic.objects.select_related('starter', 'board').order_by('-pk')[:45]
-    board_top_list = Board.objects.filter(is_top=1).all()
 
     return render(request, 'index.html', locals())
 
@@ -94,15 +101,23 @@ class TopicComments(View):
     @method_decorator(login_required)
     def post(self, request):
         f = CommentsForm(request.POST)
+        replay_user_data = request.POST['replay_user_data']
+        replay_user_id = request.POST['replay_user_id']
         if f.is_valid():
             t = f.save(commit=False)
             t.author_id = request.user.id
+            cc = request.POST['content']
+            if cc.startswith('@'):
+                _ = re.match('@(.*?) ', cc)
+                c = cc.lstrip(_.group())
+                t.content = replay_user_data + c
+                t.replay_user_id = replay_user_id
             t.save()
             # 帖子评论数+1
             c = Topic.objects.filter(id=request.POST['topic']).first()
             c.comment_num += 1
             c.save()
-            res = {"success": True, "msg": "回复失败"}
+            res = {"success": True, "msg": "回复成功"}
             return JsonResponse(res)
         else:
             print(f.errors)

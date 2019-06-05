@@ -119,7 +119,8 @@
                             </div>
                             <div class="actions">
                                 <a class="stars" onclick="stars('{{ c.id }}')">感谢</a>
-                                <a class="reply" href="#" onclick="reply('{{ c.author.name }}')">回复</a>
+                                <a class="reply" href="#replay_form"
+                                   onclick="reply('{{ c.author.name }}', '{% url 'users:member_info' c.author.username %}', '{{ c.author.id }}')">回复</a>
                             </div>
                         </div>
                         <div class="sep5"></div>
@@ -139,8 +140,10 @@
                 <h3 class="ui dividing header">添加一条新回复</h3>
                 <form class="ui reply form" method="post">
                     {% csrf_token %}
-                    <div class="field">
+                    <div class="field" id="replay_form">
                         <textarea id="comment" name="content"></textarea>
+                        <input type="hidden" name="replay_user_data" id="replay_user_data">
+                        <input type="hidden" name="replay_user_id" id="replay_user_id">
                     </div>
                     <div class="ui primary submit labeled icon button">
                         <i class="icon edit"></i> 回复
@@ -164,6 +167,7 @@
                 spellChecker: false,
                 element: document.getElementById("comment"),
                 promptURLs: true,
+                placeholder: '请使用 Markdown 格式书写 ;-)',
                 toolbar: [
                     "bold", "italic", "strikethrough", "heading", "code", "quote", "unordered-list",
                     "ordered-list", "clean-block", "link", "image", "table", "horizontal-rule", "preview", "side-by-side", "fullscreen", "guide",
@@ -181,7 +185,9 @@
             $(".submit").on('click', function () {
                 var uploadFormData = {
                     content: simplemde.value(),
-                    topic: {{ t.id }}
+                    topic: {{ t.id }},
+                    replay_user_data: $("#replay_user_data").val(),
+                    replay_user_id: $("#replay_user_id").val(),
                 }
                 $.ajax({
                     method: "POST",
@@ -200,8 +206,11 @@
 
         <script type="text/javascript">
 
-            function reply(n) {
+            function reply(n, u, i) {
                 simplemde.value('@' + n + '  ');
+                var replay_data = '@' + '[' + n + ']' + '(' + u + ')' + '  '
+                $("#replay_user_data").attr("value", replay_data);
+                $("#replay_user_id").attr("value", i);
             }
         </script>
 
@@ -227,10 +236,10 @@
                 data: {'cid': nn},
                 success: function (data) {
                     if (data["success"] == true) {
-                        alert('赞同成功')
+                        alert(data["msg"])
                         window.location.reload();
                     } else {
-                        alert(data["msg"]);
+                        alert('回复失败');
                     }
                 }
             });

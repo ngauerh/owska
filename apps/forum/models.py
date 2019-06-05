@@ -81,10 +81,12 @@ class Topic(models.Model):
 class Comments(models.Model):
     id = models.AutoField(primary_key=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, verbose_name='主题',)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='回复者',)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='回复者',  related_name='comment_user')
     content = models.TextField(blank=False)
     stars = models.IntegerField(default=0)
     create_time = models.DateTimeField(auto_now_add=True)
+    replay_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='回复对象', related_name='replay_user',
+                                    null=True, blank=True)
 
     class Meta:
         verbose_name = '回复'
