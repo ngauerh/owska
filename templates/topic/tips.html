@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block head %}
+
+
+{% endblock %}
+
+{#样式#}
+{% block css %}
+    <style>
+        .meta {
+            padding-top: 5px;
+            font-size: 5px;
+        }
+
+        .topic_name a {
+            font-size: 16px;
+            color: #778087;
+        }
+    </style>
+{% endblock %}
+
+
+{# 主体 #}
+{% block body %}
+
+    <div class="ui card" style="width: 95%;margin: 0px">
+
+        <div class="content" style="background-color: #fAfAfA;padding: 10px">
+            <div class="ui large breadcrumb">
+                <a class="section" href="/">首页</a>
+                <i class="right chevron icon divider"></i>
+                <div class="active section">提醒系统</div>
+            </div>
+        </div>
+
+        {% for m in message_list %}
+            {% if m.tips_action == '赞同' %}
+                <div class="content">
+                    <div class="meta"><a href="{% url "users:member_info" m.sender %}">{{ m.sender }}</a> &nbsp;&nbsp;
+                        {{ m.tips_action }}了你在&nbsp;&nbsp;
+                        <a href="{% url 'forum:topic' m.topic.path %}">{{ m.topic.title }}</a>&nbsp;&nbsp;的回复
+                    </div>
+                    <div class="description">
+                        {{ m.tips_content }}
+                    </div>
+                </div>
+            {% elif m.tips_action == '收藏' %}
+                <div class="content">
+                    <div class="description"><a href="{% url "users:member_info" m.sender %}">{{ m.sender }}</a> &nbsp;&nbsp;
+                        {{ m.tips_action }}了你发布的主题&nbsp;》&nbsp;
+                        <a href="{% url 'forum:topic' m.topic.path %}"><b>{{ m.topic.title }}</b></a>&nbsp;&nbsp;
+                    </div>
+                </div>
+            {% else %}
+                <div class="content">
+                    <div class="meta"><a href="{% url "users:member_info" m.sender %}">{{ m.sender }}</a> &nbsp;&nbsp;
+                        在{{ m.tips_action }}时&nbsp;&nbsp;
+                        <a href="{% url 'forum:topic' m.topic.path %}">{{ m.topic.title }}</a>&nbsp;&nbsp;提到了你
+                    </div>
+                    <div class="description">
+                        {{ m.tips_content }}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+    </div>
+    <br>
+
+    <div class="ui pagination menu">
+
+
+        {% if message_list.has_previous %}
+            <a class="item" href="?page={{ message_list.previous_page_number }}">
+                上一页
+            </a>
+        {% endif %}
+
+
+        {% if message_list.paginator.num_pages < 10 %}
+
+            {% for pg in message_list.paginator.page_range %}
+                <a class="item  {% if message_list.number == pg %}active{% endif %}" href="?page={{ pg }}">
+                    {{ pg }}
+                </a>
+            {% endfor %}
+
+        {% else %}
+
+            {% if message_list.number  > 5 %}
+                <a class="item" href="?page={{ pg }}">
+                    1
+                </a>
+                {% if message_list.number != 6 %}
+                    <div class="disabled item">
+                        ...
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% for pg in message_list.paginator.page_range %}
+
+                {% if message_list.number == pg %}
+                    <a class="item active" href="?page={{ pg }}">
+                        {{ pg }}
+                    </a>
+                {% elif pg < message_list.number|add:5 and pg > message_list.number|add:-5 %}
+                    <a class="item" href="?page={{ pg }}">
+                        {{ pg }}
+                    </a>
+                {% endif %}
+
+            {% endfor %}
+
+            {% if  message_list.number|add:5 <= message_list.paginator.num_pages %}
+                {% if message_list.number != message_list.paginator.num_pages|add:-5 %}
+                    <div class="disabled item">
+                        ...
+                    </div>
+                {% endif %}
+
+                <a class="item" href="?page={{ message_list.paginator.num_pages }}">
+                    {{ message_list.paginator.num_pages }}&nbsp;
+                </a>
+            {% endif %}
+        {% endif %}
+        {% if message_list.has_next %}
+            <a class="item" href="?page={{ message_list.next_page_number }}">
+                下一页
+            </a>
+        {% endif %}
+
+    </div>
+
+
+    <script>
+        $(document)
+            .ready(function () {
+                $('.ui.menu a.item')
+                    .on('click', function () {
+                        $(this)
+                            .addClass('active')
+                            {#.addClass('red')#}
+                            .siblings()
+                            .removeClass('active')
+                        ;
+                    })
+                ;
+            })
+        ;
+    </script>
+    <script>
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+        });
+
+        function collect(cc) {
+            event.preventDefault();
+            //使a自带的方法失效
+            $.ajax({
+                url: '{% url 'forum:board_collect' %}',
+                method: "post",
+                dataType: "json",
+                data: {'collect': cc},
+                success: function (data) {
+                    if (data["success"] == true) {
+                        alert(data["msg"])
+                        window.location.reload();
+                    } else {
+                        alert(data["msg"]);
+                    }
+                }
+            });
+        }
+
+        {#取消收藏#}
+
+        function uncollect(cc) {
+            event.preventDefault();
+            //使a自带的方法失效
+            $.ajax({
+                url: '{% url 'forum:board_uncollect' %}',
+                method: "post",
+                dataType: "json",
+                data: {'collect': cc},
+                success: function (data) {
+                    if (data["success"] == true) {
+                        alert(data["msg"])
+                        window.location.reload();
+                    } else {
+                        alert(data["msg"]);
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}
+

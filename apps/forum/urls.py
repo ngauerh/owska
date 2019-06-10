@@ -19,4 +19,5 @@ urlpatterns = [
     path('topic_uncollect', UnCollectTopic.as_view(), name='topic_uncollect'),  # 取消收藏
     path('board_collect', CollectBoard.as_view(), name='board_collect'),  # 节点收藏
     path('board_uncollect', UnCollectBoard.as_view(), name='board_uncollect'),  # 取消收藏
+    path('notifications', NoticeMessage.as_view(), name='message')
 ]

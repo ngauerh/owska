@@ -121,4 +121,13 @@ class CollectedBoard(models.Model):
     starter = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
+# 用户提醒
+class MessageTips(models.Model):
+    id = models.AutoField(primary_key=True)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)  # 相关主题
+    sender = models.ForeignKey(User, on_delete=models.CASCADE,  related_name='tips_sender')  # 发送人
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE,  related_name='tips_receiver')  # 接收人
+    tips_action = models.CharField('操作', max_length=20)   # 行为
+    tips_content = models.TextField('提醒内容')
+    create_at = models.DateTimeField('时间', auto_now_add=True)   # 时间
 

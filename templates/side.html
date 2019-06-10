@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="extra content">
-                0条消息未读
+                <a href="{% url 'forum:message' %}">{{ request.session.notic_message_nums|length }}条消息未读</a>
             </div>
         </div>
     {% else %}

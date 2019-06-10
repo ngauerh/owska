@@ -1,5 +1,4 @@
 import re
-
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, JsonResponse
@@ -16,6 +15,7 @@ from .models import *
 from users.models import User, FollowUser, PostNumbers
 from pypinyin import lazy_pinyin
 from django.utils.decorators import method_decorator
+from .tips import message_tips
 
 
 # 首页
@@ -118,6 +118,18 @@ class TopicComments(View):
             c.comment_num += 1
             c.save()
             res = {"success": True, "msg": "回复成功"}
+
+            tips_info = {
+                'topic': request.POST['topic'],
+                'sender': request.user.id,
+                'receiver': c.starter.id,
+                'tips_action': '回复',
+                'tips_content': request.POST['content']
+            }
+
+            message_tips(**tips_info)
+            request.session['notic_message_nums'] += '1'
+
             return JsonResponse(res)
         else:
             print(f.errors)
@@ -130,7 +142,19 @@ class CommentStars(View):
         s = Comments.objects.filter(id=request.POST['cid']).first()
         s.stars += 1
         s.save()
-        res = {"success": True, "msg": "赞同回复失败"}
+        res = {"success": True, "msg": "赞同回复成功"}
+
+        tips_info = {
+            'topic': s.topic.id,
+            'sender': request.user.id,
+            'receiver': s.topic.starter.id,
+            'tips_action': '赞同',
+            'tips_content': s.content,
+        }
+
+        message_tips(**tips_info)
+        request.session['notic_message_nums'] += '1'
+
         return JsonResponse(res)
 
 
@@ -154,6 +178,19 @@ class CollectTopic(View):
             s.topic_id = request.POST['collect']
             s.save()
             res = {"success": True, "msg": "收藏成功"}
+
+            t = Topic.objects.filter(id=request.POST['collect']).first()
+            tips_info = {
+                'topic': t.id,
+                'sender': request.user.id,
+                'receiver': t.starter.id,
+                'tips_action': '收藏',
+                'tips_content': t.title,
+            }
+
+            message_tips(**tips_info)
+            request.session['notic_message_nums'] += '1'
+
             return JsonResponse(res)
         except:
             res = {"success": False, "msg": "不好意思，发生未知错误"}
@@ -205,3 +242,16 @@ class UnCollectBoard(View):
         except:
             res = {"success": False, "msg": "不好意思，发生未知错误"}
             return JsonResponse(res)
+
+
+# 消息提醒
+class NoticeMessage(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        request.session['notic_message_nums'] = ''
+        m_list = MessageTips.objects.filter(receiver_id=request.user.id).all().order_by('-pk')
+        paginator = Paginator(m_list, 2)
+
+        page = request.GET.get('page')
+        message_list = paginator.get_page(page)
+        return render(request, 'topic/tips.html', locals())
